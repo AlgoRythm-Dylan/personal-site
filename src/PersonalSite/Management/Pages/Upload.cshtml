@@ -1,0 +1,34 @@
+﻿@page
+@model Management.Pages.UploadModel
+@{
+    ViewData["Title"] = "Upload";
+}
+<input type="file" accept="image/png, image/jpeg" id="image-upload"/>
+
+@section Scripts {
+    <script>
+
+        var elements = {
+            imageUpload: null
+        };
+
+        addEventListener("load", () => {
+            discoverElements();
+            hookupEvents();
+        });
+
+        function discoverElements() {
+            elements.imageUpload = document.getElementById("image-upload");
+        }
+
+        function hookupEvents() {
+            elements.imageUpload.addEventListener("input", async e => {
+                if(elements.imageUpload.files.length) {
+                    const palette = await getPaletteFromFile(elements.imageUpload.files[0]);
+                    console.log(palette);
+                }
+            });
+        }
+
+    </script>
+}
