@@ -25,7 +25,6 @@
             elements.imageUpload.addEventListener("input", async e => {
                 if(elements.imageUpload.files.length) {
                     const palette = await getPaletteFromFile(elements.imageUpload.files[0]);
-                    console.log(palette);
                 }
             });
         }
