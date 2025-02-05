@@ -1,3 +1,26 @@
+:root {
+    --body-bg: rgb(204, 231, 255);
+    --content-bg: white;
+
+    --soft-dashed-border: dashed 2px rgb(230, 230, 230);
+
+    --spacing: 0.3em;
+    --spacing-lg: 0.75em;
+
+    --rounding: 0.3pc;
+    --rounding-lg: 0.5pc;
+
+    --fg-soft: rgb(145, 145, 145);
+}
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    min-height: 0px;
+    overflow: auto;
+}
+
 html {
   font-size: 14px;
 }
@@ -8,15 +31,28 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+    background: var(--body-bg);
+    display: flex;
+    flex-direction: column;
+}
+#page-content {
+    background: var(--content-bg);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0px auto;
+    padding: var(--spacing-lg);
+}
+.image-upload-area {
+    border: var(--soft-dashed-border);
+    border-radius: var(--rounding-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+.image-upload-area > p {
+    margin: 0px;
+    padding: 0px;
+    color: var(--fg-soft);
 }

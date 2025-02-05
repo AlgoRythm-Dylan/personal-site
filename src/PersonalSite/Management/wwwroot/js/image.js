@@ -1,11 +1,26 @@
 ﻿const DEFAULT_MAX_IMAGE_SIZE = 450;
 const DEFAULT_SPLITS = 3;
 
-async function getPaletteFromFile(file, maxImageSize = null) {
+class ImageInfo {
+    constructor() {
+        this.palette = null;
+        this.brightness = null;
+    }
+}
+
+async function getImageInfoFromFile(file, maxImageSize = null) {
+    let info = new ImageInfo();
+
+    // Image preprocessing
     const image = await createImageFromFile(file);
     const reducedImage = shrinkImage(image, maxImageSize ?? DEFAULT_MAX_IMAGE_SIZE);
     const pixelData = getPixelData(reducedImage);
-    return getPalette(pixelData);
+
+    // Image processing
+    info.palette = getPalette(pixelData);
+    info.brightness = getBrightness(pixelData);
+
+    return info;
 }
 
 // Returns an image object from a file object
@@ -130,6 +145,10 @@ function getAverageColor(list) {
         Math.round(sumG / list.length),
         Math.round(sumB / list.length)
     ];
+}
+
+function getBrightness(pixelData) {
+    return getAverageColor(pixelData).reduce((prev, current) => prev + current) / 3 / 255;
 }
 
 function getPalette(pixelData, splits = null) {

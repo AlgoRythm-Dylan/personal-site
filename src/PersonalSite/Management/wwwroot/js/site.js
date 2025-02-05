@@ -1,4 +1,13 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿addEventListener("load", () => {
+    document.querySelectorAll(".image-upload-area").forEach(el => {
+        el.addEventListener("click", () => {
+            const relatedElement = document.querySelector(el.getAttribute("data-related-input"));
+            if (relatedElement) {
+                relatedElement.click();
+            }
+            else {
+                throw new Error("Cannot find related element");
+            }
+        });
+    });
+});

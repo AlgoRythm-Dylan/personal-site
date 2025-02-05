@@ -5,11 +5,26 @@
 }
 <input type="file" accept="image/png, image/jpeg" id="image-upload"/>
 
+<div class="image-upload-area" data-related-input="#image-upload">
+    <p>Drag and drop image here or click to to open file picker</p>
+</div>
+
+<p>
+    Brightness: <span id="brightness-display"></span>
+</p>
+@section Styles {
+    <style>
+        #image-upload {
+            display: none;
+        }
+    </style>
+}
 @section Scripts {
     <script>
 
         var elements = {
-            imageUpload: null
+            imageUpload: null,
+            brightnessDisplay: null
         };
 
         addEventListener("load", () => {
@@ -19,19 +34,22 @@
 
         function discoverElements() {
             elements.imageUpload = document.getElementById("image-upload");
+            elements.brightnessDisplay = document.getElementById("brightness-display");
         }
 
         function hookupEvents() {
             elements.imageUpload.addEventListener("input", async e => {
                 if(elements.imageUpload.files.length) {
-                    const palette = await getPaletteFromFile(elements.imageUpload.files[0]);
-                    for(let color of palette){
+                    const info = await getImageInfoFromFile(elements.imageUpload.files[0]);
+                    console.log(info);
+                    for(let color of info.palette){
                         let display = document.createElement("div");
                         display.style.width = "25px";
                         display.style.height = "25px";
                         display.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
                         document.body.appendChild(display);
                     }
+                    elements.brightnessDisplay.innerHTML = info.brightness.toFixed(2);
                 }
             });
         }
