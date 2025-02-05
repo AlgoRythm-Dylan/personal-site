@@ -12,12 +12,15 @@ CREATE INDEX IDX_PaletteColorsSpacial ON PersonalSite.PaletteColors (Red, Green,
 CREATE TABLE PersonalSite.Images (
 	ID INT PRIMARY KEY AUTO_INCREMENT,
     Title VARCHAR(256) CHARACTER SET utf8mb4,
-    Width INT,
-    Height INT,
-    Brightness INT,
-    CaptureDate DATETIME DEFAULT NOW(),
+    Description VARCHAR(2048) CHARACTER SET utf8mb4,
+    ViewCount INT NOT NULL DEFAULT 0,
+    Width INT NOT NULL,
+    Height INT NOT NULL,
+    Brightness INT NOT NULL,
+    CaptureDate DATETIME,
+    FileName VARCHAR(64) NOT NULL,
     
-    UploadDate DATETIME DEFAULT NOW(),
+    UploadDate DATETIME NOT NULL DEFAULT NOW(),
     DeletedDate DATETIME DEFAULT NULL
 ) CHARACTER SET utf8mb4;
 
@@ -38,7 +41,7 @@ CREATE TABLE PersonalSite.Subjects (
     ParentID INT DEFAULT NULL,
     Name VARCHAR(128) CHARACTER SET utf8mb4,
 
-    CreatedDate DATETIME DEFAULT NOW(),
+    CreatedDate DATETIME NOT NULL DEFAULT NOW(),
     DeletedDate DATETIME DEFAULT NULL,
 
     CONSTRAINT FK_Subjects_R_Parent
@@ -57,5 +60,23 @@ CREATE TABLE PersonalSite.ImageSubjects (
         ON DELETE CASCADE,
     CONSTRAINT FK_ImgSubj_R_Subjects
         FOREIGN KEY (SubjectID) REFERENCES PersonalSite.Subjects(ID)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE PersonalSite.Photographers (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(64) CHARACTER SET utf8mb4,
+    LastName VARCHAR(128) CHARACTER SET utf8mb4
+) CHARACTER SET utf8mb4;
+
+CREATE TABLE PersonalSite.ImagePhotographers (
+    ImageID INT NOT NULL,
+    PhotographerID INT NOT NULL,
+
+    CONSTRAINT FK_ImgPhotog_R_Img
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
+        ON DELETE CASCADE,
+    CONSTRAINT FK_ImgPhotog_R_Photog
+        FOREIGN KEY (PhotographerID) REFERENCES PersonalSite.Photographers(ID)
         ON DELETE CASCADE
 );
