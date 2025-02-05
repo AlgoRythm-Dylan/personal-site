@@ -1,9 +1,11 @@
 ﻿const DEFAULT_MAX_IMAGE_SIZE = 450;
+const DEFAULT_SPLITS = 3;
 
 async function getPaletteFromFile(file, maxImageSize = null) {
     const image = await createImageFromFile(file);
     const reducedImage = shrinkImage(image, maxImageSize ?? DEFAULT_MAX_IMAGE_SIZE);
     const pixelData = getPixelData(reducedImage);
+    return getPalette(pixelData);
 }
 
 // Returns an image object from a file object
@@ -65,4 +67,90 @@ function getPixelData(canvas) {
         data[i / 4] = [pixels.data[i], pixels.data[i + 1], pixels.data[i + 2]];
     }
     return data;
+}
+
+const COLOR_CHANNEL = {
+    Red: 0,
+    Green: 1,
+    Blue: 2
+};
+
+function getChannelWithLargestRange(pixelData) {
+    const redRange = getChannelRange(pixelData, COLOR_CHANNEL.Red);
+    const blueRange = getChannelRange(pixelData, COLOR_CHANNEL.Blue);
+    const greenRange = getChannelRange(pixelData, COLOR_CHANNEL.Green);
+
+    const maxRange = Math.max(redRange, greenRange, blueRange);
+
+    if (maxRange === redRange) {
+        return COLOR_CHANNEL.Red;
+    }
+    else if (maxRange === greenRange) {
+        return COLOR_CHANNEL.Green;
+    }
+    else {
+        return COLOR_CHANNEL.Blue;
+    }
+}
+
+function getChannelRange(pixelData, channel) {
+    let min = pixelData[0][channel];
+    let max = pixelData[0][channel];
+    for (let i = 1; i < pixelData.length; i++) {
+        min = Math.min(min, pixelData[i][channel]);
+        max = Math.max(max, pixelData[i][channel]);
+    }
+    return max - min;
+}
+
+function sortListByChannel(list, channel) {
+    list.sort((a, b) => a[channel] - b[channel]);
+}
+
+function splitListInHalf(list) {
+    const middle = Math.ceil(list.length / 2);
+    const firstHalf = list.slice(0, middle);
+    const secondHalf = list.slice(middle);
+    return [firstHalf, secondHalf];
+}
+
+function getAverageColor(list) {
+    if (list.length === 0) return [0, 0, 0]; // Handle empty list case
+
+    let sumR = 0, sumG = 0, sumB = 0;
+
+    for (let i = 0; i < list.length; i++) {
+        sumR += list[i][COLOR_CHANNEL.Red];
+        sumG += list[i][COLOR_CHANNEL.Green];
+        sumB += list[i][COLOR_CHANNEL.Blue];
+    }
+
+    return [
+        Math.round(sumR / list.length),
+        Math.round(sumG / list.length),
+        Math.round(sumB / list.length)
+    ];
+}
+
+function getPalette(pixelData, splits = null) {
+    splits = splits ?? DEFAULT_SPLITS;
+
+    let results = [pixelData];
+    for (let i = 0; i < splits; i++) {
+        let splitResults = [];
+        for (let result of results) {
+            const maxRangeChannel = getChannelWithLargestRange(result);
+            sortListByChannel(result, maxRangeChannel);
+            splitResults.push(...splitListInHalf(result));
+        }
+        results = splitResults;
+    }
+
+    let averagedResults = [];
+
+    for (let result of results) {
+        averagedResults.push(getAverageColor(result));
+    }
+
+    return averagedResults;
 }

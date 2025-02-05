@@ -25,6 +25,13 @@
             elements.imageUpload.addEventListener("input", async e => {
                 if(elements.imageUpload.files.length) {
                     const palette = await getPaletteFromFile(elements.imageUpload.files[0]);
+                    for(let color of palette){
+                        let display = document.createElement("div");
+                        display.style.width = "25px";
+                        display.style.height = "25px";
+                        display.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                        document.body.appendChild(display);
+                    }
                 }
             });
         }
