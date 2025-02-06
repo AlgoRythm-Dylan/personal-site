@@ -20,6 +20,9 @@ html, body {
     min-height: 0px;
     overflow: auto;
 }
+* {
+    font-family: 'Lexend Deca';
+}
 
 html {
   font-size: 14px;
