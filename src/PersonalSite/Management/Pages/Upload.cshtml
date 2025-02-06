@@ -9,13 +9,24 @@
     <p>Drag and drop image here or click to to open file picker</p>
 </div>
 
+<div id="preview-and-palette">
+    <div id="preview-box"></div>
+    <div id="palette-box"></div>
+</div>
+
 <p>
     Brightness: <span id="brightness-display"></span>
 </p>
+
+
 @section Styles {
     <style>
         #image-upload {
             display: none;
+        }
+        #preview-and-palette {
+            display: flex;
+            flex-direction: column;
         }
     </style>
 }

@@ -1,11 +1,12 @@
 ﻿const DEFAULT_MAX_IMAGE_SIZE = 450;
 const DEFAULT_SPLITS = 3;
-const DEFAULT_SIMILARITY_THRESHOLD = 0.02; // 2%
+const DEFAULT_SIMILARITY_THRESHOLD = 0.05; // 5%
 
 class ImageInfo {
     constructor() {
         this.palette = null;
         this.brightness = null;
+        this.image = null;
     }
 }
 
@@ -19,7 +20,10 @@ async function getImageInfoFromFile(file, maxImageSize = DEFAULT_MAX_IMAGE_SIZE)
 
     // Image processing
     info.palette = getPalette(pixelData);
+    removeDuplicateColors(info.palette);
     info.brightness = getBrightness(pixelData);
+
+    info.image = image;
 
     return info;
 }
@@ -183,6 +187,33 @@ function colorDistance(color1, color2) {
 
 const MAX_COLOR_DISTANCE = colorDistance([0, 0, 0], [255, 255, 255]); // Approx 441.6
 
+// If similarityThreshold is 0.05, this removes any colors in the list
+// that are within 5% similarity of each other.
 function removeDuplicateColors(list, similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD) {
+    // Explosive complexity? Yes. Not designed for lists of long
+    // length
+    for (let i = 0; i < list.length; i++) {
+        for (let j = 0; j < list.length; j++) {
+            if (i === j) {
+                // Skip comparing a color to itself
+                continue;
+            }
+            const color1 = list[i];
+            const color2 = list[j];
+            const similarity = 1 - (colorDistance(color1, color2) / MAX_COLOR_DISTANCE);
+            if (similarity > (1 - similarityThreshold)) {
+                list.splice(j, 1);
+                // Removing an item from the list makes it 1 element
+                // shorter
 
+                // Adjust the array "cursor" of the outer loop
+                // if it is beyond the element we just removed
+                if (i >= j) {
+                    i--;
+                }
+                // Always need to adjust the inner loop "cursor" position
+                j--;
+            }
+        }
+    }
 }
