@@ -18,6 +18,7 @@
     Brightness: <span id="brightness-display"></span>
 </p>
 
+<div class="hline"></div>
 
 @section Styles {
     <style>
@@ -26,6 +27,7 @@
         }
         #brightness-label {
             display: none;
+            text-align: center;
         }
         #preview-and-palette {
             display: none;
@@ -108,7 +110,7 @@
                 elements.previewBox.appendChild(info.image);
                 elements.paletteBox.style.width = `${(info.image.offsetHeight/info.image.naturalHeight) * info.image.naturalWidth}px`;
                 elements.brightnessLabel.style.display = "block";
-                elements.brightnessDisplay.innerHTML = info.brightness.toFixed(2);
+                elements.brightnessDisplay.innerHTML = Math.round(info.brightness * 100) + "%";
             }
         }
 
