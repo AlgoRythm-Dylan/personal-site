@@ -2,6 +2,7 @@
     --body-bg: rgb(204, 231, 255);
     --content-bg: white;
 
+    --soft-border: solid 2px rgb(230, 230, 230);
     --soft-dashed-border: dashed 2px rgb(230, 230, 230);
 
     --spacing: 0.3em;
@@ -36,8 +37,12 @@ html {
 
 body {
     background: var(--body-bg);
+}
+html, body {
     display: flex;
     flex-direction: column;
+    min-width: 0px;
+    width: 100%;
 }
 #page-content {
     background: var(--content-bg);
@@ -45,15 +50,21 @@ body {
     max-width: 1200px;
     margin: 0px auto;
     padding: var(--spacing-lg);
-    margin-top: var(--spacing);
+    overflow: hidden;
+    flex: 1;
 }
 #page-header {
     position: sticky;
     top: 0px;
     left: 0px;
-    width: 100%;
     display: flex;
     background: var(--content-bg);
+    padding: var(--spacing-lg);
+    border-bottom: var(--soft-border);
+}
+#page-header > h1 {
+    margin: 0px;
+    padding: 0px;
 }
 
 .image-upload-area {
