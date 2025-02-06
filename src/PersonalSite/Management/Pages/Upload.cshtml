@@ -9,28 +9,32 @@
     <p>Drag and drop image here or click to to open file picker</p>
 </div>
 
-<div id="preview-and-palette">
-    <div id="preview-box"></div>
-    <div id="palette-box"></div>
+<div id="hidden-before-upload">
+    <div id="preview-and-palette">
+        <div id="preview-box"></div>
+        <div id="palette-box"></div>
+    </div>
+
+    <p id="brightness-label">
+        Brightness: <span id="brightness-display"></span>
+    </p>
+
+    <div class="hline"></div>
 </div>
-
-<p id="brightness-label">
-    Brightness: <span id="brightness-display"></span>
-</p>
-
-<div class="hline"></div>
 
 @section Styles {
     <style>
         #image-upload {
             display: none;
         }
-        #brightness-label {
+        #hidden-before-upload {
             display: none;
+            flex-direction: column;
+        }
+        #brightness-label {
             text-align: center;
         }
         #preview-and-palette {
-            display: none;
             flex-direction: column;
             min-height: 0px;
             max-height: 500px;
@@ -67,6 +71,7 @@
 
         var elements = {
             imageUpload: null,
+            hiddenBeforeUpload: null,
             brightnessLabel: null,
             brightnessDisplay: null,
             previewAndPalette: null,
@@ -82,6 +87,7 @@
 
         function discoverElements() {
             elements.imageUpload = document.getElementById("image-upload");
+            elements.hiddenBeforeUpload = document.getElementById("hidden-before-upload");
             elements.brightnessLabel = document.getElementById("brightness-label");
             elements.brightnessDisplay = document.getElementById("brightness-display");
             elements.previewAndPalette = document.getElementById("preview-and-palette");
@@ -97,6 +103,7 @@
         }
 
         async function handleImageInput(){
+            elements.hiddenBeforeUpload.style.display = "flex";
             if(elements.imageUpload.files.length) {
                 const info = await getImageInfoFromFile(elements.imageUpload.files[0]);
                 for(let color of info.palette){
@@ -106,17 +113,14 @@
                     display.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
                     elements.paletteBox.appendChild(display);
                 }
-                elements.previewAndPalette.style.display = "flex";
                 elements.previewBox.appendChild(info.image);
                 elements.paletteBox.style.width = `${(info.image.offsetHeight/info.image.naturalHeight) * info.image.naturalWidth}px`;
-                elements.brightnessLabel.style.display = "block";
                 elements.brightnessDisplay.innerHTML = Math.round(info.brightness * 100) + "%";
             }
         }
 
         function resetPage(){
-            elements.brightnessLabel.style.display = "none";
-            elements.previewAndPalette.style.display = "none";
+            elements.hiddenBeforeUpload.style.display = "none";
             elements.brightnessDisplay.innerHTML = "";
             elements.previewBox.innerHTML = "";
             elements.paletteBox.innerHTML = "";
