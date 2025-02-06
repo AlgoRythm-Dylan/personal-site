@@ -1,5 +1,6 @@
 ﻿const DEFAULT_MAX_IMAGE_SIZE = 450;
 const DEFAULT_SPLITS = 3;
+const DEFAULT_SIMILARITY_THRESHOLD = 0.02; // 2%
 
 class ImageInfo {
     constructor() {
@@ -8,12 +9,12 @@ class ImageInfo {
     }
 }
 
-async function getImageInfoFromFile(file, maxImageSize = null) {
+async function getImageInfoFromFile(file, maxImageSize = DEFAULT_MAX_IMAGE_SIZE) {
     let info = new ImageInfo();
 
     // Image preprocessing
     const image = await createImageFromFile(file);
-    const reducedImage = shrinkImage(image, maxImageSize ?? DEFAULT_MAX_IMAGE_SIZE);
+    const reducedImage = shrinkImage(image, maxImageSize);
     const pixelData = getPixelData(reducedImage);
 
     // Image processing
@@ -151,9 +152,7 @@ function getBrightness(pixelData) {
     return getAverageColor(pixelData).reduce((prev, current) => prev + current) / 3 / 255;
 }
 
-function getPalette(pixelData, splits = null) {
-    splits = splits ?? DEFAULT_SPLITS;
-
+function getPalette(pixelData, splits = DEFAULT_SPLITS) {
     let results = [pixelData];
     for (let i = 0; i < splits; i++) {
         let splitResults = [];
@@ -172,4 +171,18 @@ function getPalette(pixelData, splits = null) {
     }
 
     return averagedResults;
+}
+
+function colorDistance(color1, color2) {
+    return Math.sqrt(
+        Math.pow(color1[COLOR_CHANNEL.Red] - color2[COLOR_CHANNEL.Red], 2) +
+        Math.pow(color1[COLOR_CHANNEL.Green] - color2[COLOR_CHANNEL.Green], 2) +
+        Math.pow(color1[COLOR_CHANNEL.Blue] - color2[COLOR_CHANNEL.Blue], 2)
+    );
+}
+
+const MAX_COLOR_DISTANCE = colorDistance([0, 0, 0], [255, 255, 255]); // Approx 441.6
+
+function removeDuplicateColors(list, similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD) {
+
 }

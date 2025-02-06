@@ -42,7 +42,17 @@ body {
     max-width: 1200px;
     margin: 0px auto;
     padding: var(--spacing-lg);
+    margin-top: var(--spacing);
 }
+#page-header {
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    display: flex;
+    background: var(--content-bg);
+}
+
 .image-upload-area {
     border: var(--soft-dashed-border);
     border-radius: var(--rounding-lg);
