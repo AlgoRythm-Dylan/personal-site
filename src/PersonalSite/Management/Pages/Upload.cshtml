@@ -7,6 +7,7 @@
 
 <div class="image-upload-area" data-related-input="#image-upload">
     <p>Drag and drop image here or click to to open file picker</p>
+    <p class="image-upload-area-filename"></p>
 </div>
 
 <div id="hidden-before-upload">
@@ -15,11 +16,16 @@
         <div id="palette-box"></div>
     </div>
 
-    <p id="brightness-label">
-        Brightness: <span id="brightness-display"></span>
-    </p>
+    @* <div class="hline"></div> *@
 
-    <div class="hline"></div>
+    <div id="basic-stats-grid">
+        <p id="brightness-label">
+            Brightness: <span id="brightness-display"></span>
+        </p>
+        <p id="resolution-label">
+            Resolution: <span id="resolution-display"></span>
+        </p>
+    </div>
 </div>
 
 @section Styles {
@@ -30,9 +36,6 @@
         #hidden-before-upload {
             display: none;
             flex-direction: column;
-        }
-        #brightness-label {
-            text-align: center;
         }
         #preview-and-palette {
             flex-direction: column;
@@ -65,6 +68,24 @@
         #palette-box > div {
             flex: 1;
         }
+
+        #basic-stats-grid {
+            margin-top: var(--spacing-lg);
+            display: grid;
+            border: var(--border-soft);
+            border-radius: var(--rounding);
+            grid-template-columns: 1fr 1fr;
+        }
+
+        #basic-stats-grid > * {
+            margin: 0px;
+            padding: var(--spacing-lg);
+            border-right: var(--border-soft);
+            text-align: center;
+        }
+        #basic-stats-grid > *:last-of-type {
+            border-right: none;
+        }
     </style>
 }
 @section Scripts {
@@ -73,8 +94,8 @@
         var elements = {
             imageUpload: null,
             hiddenBeforeUpload: null,
-            brightnessLabel: null,
             brightnessDisplay: null,
+            resolutionDisplay: null,
             previewAndPalette: null,
             previewBox: null,
             paletteBox: null
@@ -89,8 +110,8 @@
         function discoverElements() {
             elements.imageUpload = document.getElementById("image-upload");
             elements.hiddenBeforeUpload = document.getElementById("hidden-before-upload");
-            elements.brightnessLabel = document.getElementById("brightness-label");
             elements.brightnessDisplay = document.getElementById("brightness-display");
+            elements.resolutionDisplay = document.getElementById("resolution-display");
             elements.previewAndPalette = document.getElementById("preview-and-palette");
             elements.previewBox = document.getElementById("preview-box");
             elements.paletteBox = document.getElementById("palette-box");
@@ -104,10 +125,10 @@
         }
 
         async function handleImageInput(){
-            elements.hiddenBeforeUpload.style.display = "flex";
             if(elements.imageUpload.files.length) {
                 const info = await getImageInfoFromFile(elements.imageUpload.files[0]);
-                for(let color of info.palette){
+                elements.hiddenBeforeUpload.style.display = "flex";
+                for (let color of info.palette) {
                     let display = document.createElement("div");
                     display.style.width = "25px";
                     display.style.height = "25px";
@@ -117,6 +138,7 @@
                 elements.previewBox.appendChild(info.image);
                 elements.paletteBox.style.width = `${(info.image.offsetHeight/info.image.naturalHeight) * info.image.naturalWidth}px`;
                 elements.brightnessDisplay.innerHTML = Math.round(info.brightness * 100) + "%";
+                elements.resolutionDisplay.innerHTML = `${info.image.naturalWidth}x${info.image.naturalHeight}`;
             }
         }
 

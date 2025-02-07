@@ -1,13 +1,12 @@
 ﻿addEventListener("load", () => {
     document.querySelectorAll(".image-upload-area").forEach(el => {
         const relatedElement = document.querySelector(el.getAttribute("data-related-input"));
+        const filenameLabel = document.querySelector(".image-upload-area-filename");
+        if (!relatedElement) {
+            throw new Error("Cannot find related element");
+        }
         el.addEventListener("click", () => {
-            if (relatedElement) {
-                relatedElement.click();
-            }
-            else {
-                throw new Error("Cannot find related element");
-            }
+            relatedElement.click();
         });
         el.addEventListener("dragover", e => {
             e.preventDefault();
@@ -17,8 +16,14 @@
             e.preventDefault();
             e.stopPropagation();
             relatedElement.files = e.dataTransfer.files;
-            relatedElement.dispatchEvent(new Event('change', { bubbles: true }));
-            relatedElement.dispatchEvent(new Event('input', { bubbles: true }));
+            relatedElement.dispatchEvent(new Event("change", { bubbles: true }));
+            relatedElement.dispatchEvent(new Event("input", { bubbles: true }));
+        });
+        relatedElement.addEventListener("input", () => {
+            if (relatedElement.files.length) {
+                filenameLabel.style.display = "flex";
+                filenameLabel.innerHTML = relatedElement.files[0].name;
+            }
         });
     });
 });
