@@ -26,6 +26,9 @@
             Resolution: <span id="resolution-display"></span>
         </p>
     </div>
+
+    <h2>Image Sizes and Watermarks</h2>
+
 </div>
 
 @section Styles {
@@ -139,6 +142,7 @@
                 elements.paletteBox.style.width = `${(info.image.offsetHeight/info.image.naturalHeight) * info.image.naturalWidth}px`;
                 elements.brightnessDisplay.innerHTML = Math.round(info.brightness * 100) + "%";
                 elements.resolutionDisplay.innerHTML = `${info.image.naturalWidth}x${info.image.naturalHeight}`;
+                const downscaledImages = getDownscaledImages(info.image);
             }
         }
 

@@ -1,6 +1,21 @@
 ﻿const DEFAULT_MAX_IMAGE_SIZE = 450;
 const DEFAULT_SPLITS = 3;
 const DEFAULT_SIMILARITY_THRESHOLD = 0.05; // 5%
+const DOWNSCALE_MAX_DIMENSIONS = {
+    Large: 1920,
+    Standard: 1280,
+    Small: 640,
+    Thumb: 256
+};
+
+class DownscaledImages {
+    constructor() {
+        this.large = null;
+        this.standard = null;
+        this.small = null;
+        this.thumb = null;
+    }
+}
 
 class ImageInfo {
     constructor() {
@@ -216,4 +231,15 @@ function removeDuplicateColors(list, similarityThreshold = DEFAULT_SIMILARITY_TH
             }
         }
     }
+}
+
+function generateDownscaledImages(sourceImage) {
+    const maxImageDimension = Math.max(sourceImage.naturalWidth, sourceImage.naturalHeight);
+    let downscaled = new DownscaledImages();
+    for (const [sizeName, size] of Object.entries(DOWNSCALE_MAX_DIMENSIONS)) {
+        if (maxImageDimension > size) {
+            downscaled[sizeName.toLowerCase()] = shrinkImage(sourceImage, size);
+        }
+    }
+    return downscaled;
 }
