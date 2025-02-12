@@ -29,6 +29,8 @@
 
     <h2>Image Sizes and Watermarks</h2>
 
+    <div id="downscaled-images-container"></div>
+
 </div>
 
 @section Styles {
@@ -89,6 +91,17 @@
         #basic-stats-grid > *:last-of-type {
             border-right: none;
         }
+
+        #downscaled-images-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+        }
+        #downscaled-images-container > canvas {
+            width: auto;
+            height: auto;
+            max-height: 500px;
+        }
     </style>
 }
 @section Scripts {
@@ -101,7 +114,8 @@
             resolutionDisplay: null,
             previewAndPalette: null,
             previewBox: null,
-            paletteBox: null
+            paletteBox: null,
+            downscaledImagesContainer: null
         };
 
         addEventListener("load", () => {
@@ -118,6 +132,7 @@
             elements.previewAndPalette = document.getElementById("preview-and-palette");
             elements.previewBox = document.getElementById("preview-box");
             elements.paletteBox = document.getElementById("palette-box");
+            elements.downscaledImagesContainer = document.getElementById("downscaled-images-container");
         }
 
         function hookupEvents() {
@@ -142,7 +157,8 @@
                 elements.paletteBox.style.width = `${(info.image.offsetHeight/info.image.naturalHeight) * info.image.naturalWidth}px`;
                 elements.brightnessDisplay.innerHTML = Math.round(info.brightness * 100) + "%";
                 elements.resolutionDisplay.innerHTML = `${info.image.naturalWidth}x${info.image.naturalHeight}`;
-                const downscaledImages = getDownscaledImages(info.image);
+                const downscaledImages = generateDownscaledImages(info.image);
+                renderDownscaledImages(downscaledImages);
             }
         }
 
@@ -151,6 +167,20 @@
             elements.brightnessDisplay.innerHTML = "";
             elements.previewBox.innerHTML = "";
             elements.paletteBox.innerHTML = "";
+        }
+
+        function renderDownscaledImages(images){
+            elements.downscaledImagesContainer.innerHTML = "";
+            for(const [sizeName, image] of Object.entries(images)){
+                renderDownscaledImage(sizeName, image);
+            }
+        }
+
+        function renderDownscaledImage(sizeName, image){
+            const label = document.createElement("h2");
+            label.innerHTML = sizeName + ` (${image.width}x${image.height} px)`;
+            elements.downscaledImagesContainer.append(label);
+            elements.downscaledImagesContainer.append(image);
         }
 
     </script>

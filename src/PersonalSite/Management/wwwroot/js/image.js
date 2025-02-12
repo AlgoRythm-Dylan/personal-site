@@ -4,8 +4,7 @@ const DEFAULT_SIMILARITY_THRESHOLD = 0.05; // 5%
 const DOWNSCALE_MAX_DIMENSIONS = {
     Large: 1920,
     Standard: 1280,
-    Small: 640,
-    Thumb: 256
+    Small: 640
 };
 
 class DownscaledImages {
@@ -13,7 +12,6 @@ class DownscaledImages {
         this.large = null;
         this.standard = null;
         this.small = null;
-        this.thumb = null;
     }
 }
 
