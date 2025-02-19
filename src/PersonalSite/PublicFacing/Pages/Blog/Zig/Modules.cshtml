@@ -224,10 +224,9 @@ pub fn init(allocator: Allocator) Self {
     <code>BitStack</code> uses the builtin directly, but
     <code>ArrayList</code> uses the reference to <code>Self</code>,
     despite the fact that <code>BitStack</code> stores a reference
-    to itself anyways! This probably comes down to style, and
-    personally, I enjoy the option that ironically isn't taken here
-    at all. Why not combine the two styles to be the most explicit
-    possible?
+    to itself anyways! This probably comes down to style. My initial
+    thought was to combine these approaches and use a named variable
+    like so:
 </p>
 <pre class="code">
 const BitStack = @@This();
@@ -239,8 +238,10 @@ pub fn init(allocator: Allocator) BitStack {
 }
 </pre>
 <p>
-    Now the ugly builtin is only written once, and instead,
-    the descriptive struct name <code>BitStack</code> is
-    used everywhere instead. I think this is the most clean
-    option that still falls within idiomatic Zig!
+    The problem: now the code becomes super confusing if
+    you want to rename BitStack but forget to change the
+    named reference to <code>@@This()</code>. So, the
+    approach that <code>ArrayList</code> takes where the
+    builtin is used just one time and the type is referenced
+    as "Self" from that point on seems to be the best option.
 </p>
