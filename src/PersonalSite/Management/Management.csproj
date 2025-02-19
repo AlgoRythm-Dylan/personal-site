@@ -13,8 +13,4 @@
     <None Remove="wwwroot\lib\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Blog\" />
-  </ItemGroup>
-
 </Project>
