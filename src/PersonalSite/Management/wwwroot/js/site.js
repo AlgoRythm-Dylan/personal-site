@@ -27,3 +27,9 @@
         });
     });
 });
+
+class API {
+    static async fetch(url, options) {
+
+    }
+}

@@ -54,6 +54,7 @@ CREATE TABLE PersonalSite.ImageSubjects (
     SubjectID INT NOT NULL,
     QuantityBucket INT NOT NULL,
     IsPrimarySubject TINYINT NOT NULL,
+    DateAdded DATETIME NOT NULL DEFAULT NOW(),
 
     CONSTRAINT FK_ImgSubj_R_Image
         FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
@@ -67,11 +68,13 @@ CREATE TABLE PersonalSite.Photographers (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     FirstName VARCHAR(64) CHARACTER SET utf8mb4,
     LastName VARCHAR(128) CHARACTER SET utf8mb4
+    DateAdded DATETIME NOT NULL DEFAULT NOW()
 ) CHARACTER SET utf8mb4;
 
 CREATE TABLE PersonalSite.ImagePhotographers (
     ImageID INT NOT NULL,
     PhotographerID INT NOT NULL,
+    DateAdded DATETIME NOT NULL DEFAULT NOW(),
 
     CONSTRAINT FK_ImgPhotog_R_Img
         FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
@@ -80,3 +83,30 @@ CREATE TABLE PersonalSite.ImagePhotographers (
         FOREIGN KEY (PhotographerID) REFERENCES PersonalSite.Photographers(ID)
         ON DELETE CASCADE
 );
+
+
+CREATE TABLE PersonalSite.Collections (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(64) CHARACTER SET utf8mb4,
+    DateAdded DATETIME NOT NULL DEFAULT NOW()
+) CHARACTER SET utf8mb4;
+
+CREATE TABLE PersonalSite.CollectionImages (
+    ImageID INT NOT NULL,
+    CollectionID INT NOT NULL,
+    
+    CONSTRAINT FK_CollecImg_R_Img
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
+        ON DELETE CASCADE,
+    CONSTRAINT FK_CollecImg_R_Collec
+        FOREIGN KEY (CollectionID) REFERENCES PersonalSite.Collections(ID)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE PersonalSite.Settings (
+    DefaultPhotographerID INT,
+
+    CONSTRAINT FK_Settings_R_Photographers
+        FOREIGN KEY (DefaultPhotographerID) REFERENCES PersonalSite.Photographers(ID)
+        ON DELETE SET NULL
+)
