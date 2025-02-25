@@ -1,3 +1,4 @@
+using Management.Services;
 using PersonalSiteLib;
 
 namespace Management
@@ -11,6 +12,7 @@ namespace Management
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddTransient<PersonalSiteCtx>();
+            builder.Services.AddTransient<IDbSettings, DbSettings>();
 
             var app = builder.Build();
 

@@ -24,15 +24,24 @@ CREATE TABLE PersonalSite.Images (
     DeletedDate DATETIME DEFAULT NULL
 ) CHARACTER SET utf8mb4;
 
+CREATE TABLE PersonalSite.ImageViews (
+    ImageID INT NOT NULL,
+    Timestamp DATETIME NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT FK_ImageViews_R_Images
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
+        ON DELETE CASCADE
+);
+
 CREATE TABLE PersonalSite.ImageColors (
     ImageID INT NOT NULL,
     PaletteColorID INT NOT NULL,
 
     CONSTRAINT FK_ImageColors_R_Images
-        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
         ON DELETE CASCADE,
     CONSTRAINT FK_ImageColors_R_Colors FOREIGN KEY (PaletteColorID)
-        REFERENCES PersonalSite.PaletteColors(ID)
+        REFERENCES PersonalSite.PaletteColors (ID)
         ON DELETE CASCADE
 );
 
@@ -45,7 +54,7 @@ CREATE TABLE PersonalSite.Subjects (
     DeletedDate DATETIME DEFAULT NULL,
 
     CONSTRAINT FK_Subjects_R_Parent
-        FOREIGN KEY (ParentID) REFERENCES PersonalSite.Subjects(ID)
+        FOREIGN KEY (ParentID) REFERENCES PersonalSite.Subjects (ID)
         ON DELETE CASCADE
 ) CHARACTER SET utf8mb4;
 
@@ -57,10 +66,10 @@ CREATE TABLE PersonalSite.ImageSubjects (
     DateAdded DATETIME NOT NULL DEFAULT NOW(),
 
     CONSTRAINT FK_ImgSubj_R_Image
-        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
         ON DELETE CASCADE,
     CONSTRAINT FK_ImgSubj_R_Subjects
-        FOREIGN KEY (SubjectID) REFERENCES PersonalSite.Subjects(ID)
+        FOREIGN KEY (SubjectID) REFERENCES PersonalSite.Subjects (ID)
         ON DELETE CASCADE
 );
 
@@ -77,10 +86,10 @@ CREATE TABLE PersonalSite.ImagePhotographers (
     DateAdded DATETIME NOT NULL DEFAULT NOW(),
 
     CONSTRAINT FK_ImgPhotog_R_Img
-        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
         ON DELETE CASCADE,
     CONSTRAINT FK_ImgPhotog_R_Photog
-        FOREIGN KEY (PhotographerID) REFERENCES PersonalSite.Photographers(ID)
+        FOREIGN KEY (PhotographerID) REFERENCES PersonalSite.Photographers (ID)
         ON DELETE CASCADE
 );
 
@@ -96,17 +105,16 @@ CREATE TABLE PersonalSite.CollectionImages (
     CollectionID INT NOT NULL,
     
     CONSTRAINT FK_CollecImg_R_Img
-        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
         ON DELETE CASCADE,
     CONSTRAINT FK_CollecImg_R_Collec
-        FOREIGN KEY (CollectionID) REFERENCES PersonalSite.Collections(ID)
+        FOREIGN KEY (CollectionID) REFERENCES PersonalSite.Collections (ID)
         ON DELETE CASCADE
 );
 
-CREATE TABLE PersonalSite.Settings (
-    DefaultPhotographerID INT,
+CREATE TABLE PersonalSite.PageViews (
+    PageName VARCHAR(64) CHARACTER SET utf8mb4,
+    Timestamp DATETIME NOT NULL DEFAULT NOW()
+);
 
-    CONSTRAINT FK_Settings_R_Photographers
-        FOREIGN KEY (DefaultPhotographerID) REFERENCES PersonalSite.Photographers(ID)
-        ON DELETE SET NULL
-)
+CREATE INDEX IDX_PageViewName ON PersonalSite.PageViews (PageName);
