@@ -97,10 +97,19 @@
             flex-direction: column;
             justify-content: start;
         }
-        #downscaled-images-container > canvas {
-            width: auto;
-            height: auto;
+
+        .downscaled-image-container {
             max-height: 500px;
+            display: flex;
+            overfllow: hidden;
+        }
+        .downscaled-image-container > canvas {
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            object-position: left;
+            height: auto;
+            max-height: 100%;
         }
     </style>
 }
@@ -178,9 +187,17 @@
 
         function renderDownscaledImage(sizeName, image){
             const label = document.createElement("h2");
-            label.innerHTML = sizeName + ` (${image.width}x${image.height} px)`;
+            label.innerHTML = capFirst(sizeName) + ` (${image.width}x${image.height} px)`;
             elements.downscaledImagesContainer.append(label);
-            elements.downscaledImagesContainer.append(image);
+            const container = document.createElement("div");
+            container.className = "downscaled-image-container";
+            elements.downscaledImagesContainer.append(container);
+            container.append(image);
+        }
+
+        function capFirst(str){
+            if(str.length === 0) return str;
+            return str[0].toLocaleUpperCase() + str.substring(1);
         }
 
     </script>
