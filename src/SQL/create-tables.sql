@@ -19,6 +19,11 @@ CREATE TABLE PersonalSite.Images (
     Brightness INT NOT NULL,
     CaptureDate DATETIME,
     FileName VARCHAR(64) NOT NULL,
+    IsHDR INT NOT NULL DEFAULT 0,
+    ISO INT,
+    ExposureTimeNumerator INT,
+    ExposureTimeDenominator INT,
+    Aperature DECIMAL(4, 4),
     
     UploadDate DATETIME NOT NULL DEFAULT NOW(),
     DeletedDate DATETIME DEFAULT NULL
@@ -42,6 +47,16 @@ CREATE TABLE PersonalSite.ImageColors (
         ON DELETE CASCADE,
     CONSTRAINT FK_ImageColors_R_Colors FOREIGN KEY (PaletteColorID)
         REFERENCES PersonalSite.PaletteColors (ID)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE PersonalSite.ImageSizes (
+    ImageID INT NOT NULL,
+    Width INT NOT NULL,
+    Height INT NOT NULL,
+
+    CONSTRAINT FK_ImageSizes_R_Images
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
         ON DELETE CASCADE
 );
 
