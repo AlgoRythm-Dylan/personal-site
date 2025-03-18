@@ -16,8 +16,6 @@
         <div id="palette-box"></div>
     </div>
 
-    @* <div class="hline"></div> *@
-
     <div id="basic-stats-grid">
         <p id="brightness-label">
             Brightness: <span id="brightness-display"></span>
@@ -26,10 +24,6 @@
             Resolution: <span id="resolution-display"></span>
         </p>
     </div>
-
-    <h2>Image Sizes and Watermarks</h2>
-
-    <div id="downscaled-images-container"></div>
 
 </div>
 
@@ -91,26 +85,6 @@
         #basic-stats-grid > *:last-of-type {
             border-right: none;
         }
-
-        #downscaled-images-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-        }
-
-        .downscaled-image-container {
-            max-height: 500px;
-            display: flex;
-            overfllow: hidden;
-        }
-        .downscaled-image-container > canvas {
-            width: auto;
-            max-width: 100%;
-            object-fit: contain;
-            object-position: left;
-            height: auto;
-            max-height: 100%;
-        }
     </style>
 }
 @section Scripts {
@@ -123,8 +97,7 @@
             resolutionDisplay: null,
             previewAndPalette: null,
             previewBox: null,
-            paletteBox: null,
-            downscaledImagesContainer: null
+            paletteBox: null
         };
 
         addEventListener("load", () => {
@@ -166,8 +139,6 @@
                 elements.paletteBox.style.width = `${(info.image.offsetHeight/info.image.naturalHeight) * info.image.naturalWidth}px`;
                 elements.brightnessDisplay.innerHTML = Math.round(info.brightness * 100) + "%";
                 elements.resolutionDisplay.innerHTML = `${info.image.naturalWidth}x${info.image.naturalHeight}`;
-                //const downscaledImages = generateDownscaledImages(info.image);
-                //renderDownscaledImages(downscaledImages);
             }
         }
 
@@ -176,28 +147,6 @@
             elements.brightnessDisplay.innerHTML = "";
             elements.previewBox.innerHTML = "";
             elements.paletteBox.innerHTML = "";
-        }
-
-        function renderDownscaledImages(images){
-            elements.downscaledImagesContainer.innerHTML = "";
-            for(const [sizeName, image] of Object.entries(images)){
-                renderDownscaledImage(sizeName, image);
-            }
-        }
-
-        function renderDownscaledImage(sizeName, image){
-            const label = document.createElement("h2");
-            label.innerHTML = capFirst(sizeName) + ` (${image.width}x${image.height} px)`;
-            elements.downscaledImagesContainer.append(label);
-            const container = document.createElement("div");
-            container.className = "downscaled-image-container";
-            elements.downscaledImagesContainer.append(container);
-            container.append(image);
-        }
-
-        function capFirst(str){
-            if(str.length === 0) return str;
-            return str[0].toLocaleUpperCase() + str.substring(1);
         }
 
     </script>
