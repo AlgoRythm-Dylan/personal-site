@@ -1,0 +1,336 @@
+﻿@page
+@model Web.Pages.Blog.Zig.FileGrouperModel
+@{
+    ViewData["Title"] = "File Grouper";
+}
+<h1>Making a File Grouper Using Zig</h1>
+<p>
+    <i>Written for Zig 0.14.0; last updated Feb 26, 2025</i>
+</p>
+<p>
+    So I've finally been educating myself about my camera
+    equipment and recently started shooting in both raw and
+    jpeg formats instead of just jpeg. The benefits are
+    obvious, but one little hitch is that when I grab the
+    files off my camera and put them onto my computer, they're
+    all mixed up. This is sort of annoying because what I want
+    to do is "preview" the files in their jpeg format, and
+    if the jpeg isn't good enough (over/underexposed, noisy, etc),
+    then I want to load up the raw file and salvage it.
+</p>
+<p>
+    So, really, I just needed a little program to take a folder
+    full of jpegs and raws and then just turn it into two
+    folders - one for each type. Since I know Node.JS like the
+    back of my hand, I just whipped up a super quick and dirty
+    script to do this for me.
+</p>
+<pre class="code">
+import { readdir, mkdir, rename } from 'node:fs/promises';
+import { join } from 'node:path';
+
+console.log("Separate by filetype by Dylan Perunko");
+
+const existingFolders = new Set();
+
+async function createFolder(name){
+    if(existingFolders.has(name)) return;
+    try {
+        console.log(`Creating folder ${name}...`);
+        await mkdir(name);
+        existingFolders.add(name);
+    }
+    catch (ex) {
+        console.error(`Could not create folder ${name} because ${ex.message}`);
+    }
+}
+
+for(let fileName of await readdir(".")){
+    if(!fileName.includes(".")) continue;
+    const fileType = fileName.substring(fileName.indexOf(".") + 1).toLocaleUpperCase();
+    console.log(`Found file "${fileName}" of type "${fileType}"`);
+    await createFolder(fileType);
+    console.log(`Moving file to folder...`);
+    await rename(fileName, join(fileType, fileName));
+}
+</pre>
+<p>
+    There you go, a nice little 27-liner including blanks.
+    This really is the sort of thing scripting languages were
+    made for, and JavaScript with Node.JS does the job very
+    well.
+</p>
+<p>
+    Naturally, the next step was to make it significantly more
+    complicated - as an educational exercise.
+</p>
+<p>
+    Now, my Zig skills are in need of sharpening and this little
+    job seemed like a perfect mix of:
+</p>
+<ul>
+    <li>Can be completed in one night</li>
+    <li>Will actually be useful</li>
+    <li>Will likely learn something</li>
+</ul>
+<p>
+    Okay, so let's break down the steps required to perform this
+    operation.
+</p>
+<ol>
+    <li>Loop over all the files in the user's current working directory</li>
+    <li>See if the file has a file extension</li>
+    <li>If so, create a folder for that extension type and...</li>
+    <li>Move the file into that folder</li>
+</ol>
+<p>
+    Let's tackle these one at a time!
+</p>
+<h2>Loop over all the files in the user's current working directory</h2>
+<p>
+    Some languages make this easy, and some make it downright painful.
+    Luckily, Zig falls into the former category. All a Zig programmer
+    needs to do is grab a reference to the current working directory,
+    open it, and then iterate over its contents. This is as simple as this:
+</p>
+<pre class="code">
+var dir = try fs.cwd().openDir(".", .{ .iterate = true, .access_sub_paths = false });
+var iter = dir.iterate();
+while(try iter.next()) |file| {
+    if(file.kind == .file) {
+        // ... use file
+</pre>
+<h2>See if the file has a file extension</h2>
+<p>
+    Again, this one was dead simple thanks to <code>std.mem.lastIndexOf</code>.
+    The only thing to pay attention here is unlike in other languages, this
+    returns <code>null</code>, not <code>-1</code>, if the item was not found.
+</p>
+<pre>
+const dot_index_maybe = mem.lastIndexOf(u8, file.name, ".");
+if(dot_index_maybe) |dot_index| {
+    // Continue to next steps
+}
+else {
+    std.debug.print("Did not move file {s} because it has no extension\n", .{ file.name });
+}
+</pre>
+<h2>If so, create a folder for that extension type</h2>
+<p>
+    This is where it started getting a little research-y on
+    my end. First, let's tackle the problem of files with the same
+    extension, but differing case, such as .jpg or .JPG. I went
+    with the most simple yet least robust option: case folding
+    (making a string either all uppercase or all lowercase).
+    This way, all jpg images will go into a folder called "JPG".
+    In Zig, you can do this without heap allocations using
+    <code>std.ascii.upperString</code>. As the name suggests,
+    this requires that the input be in ascii encoding, which
+    isn't a problem at all for me because the camera names the
+    files "IMG_(id).(encoding)", so I went with this. It's extra
+    nice because it takes in an output buffer that we can define
+    on the stack, and it returns a slice of that output buffer
+    so we don't even need to keep track of the output length.
+</p>
+<pre class="code">
+const file_type = ascii.upperString(&buffer, file.name[dot_index + 1..]);
+</pre>
+<p>
+    So now that we have the name of the folder, it's certainly time
+    to create the folder itself. This can be sort of a complicated
+    operation with lots of error handling potential (even if we don't
+    take advantage of that) so I chose to separate this logic into
+    a function (<code>createDirMaybe</code>).
+</p>
+<p>
+    IO operations are famously slow, so I want to avoid doing them
+    hundreds of unnecessary times. So let's consider the following:
+</p>
+<ul>
+    <li>Folders only need to be created once</li>
+    <li>We want to remember if a folder already exists</li>
+</ul>
+<p>
+    So to that end, the simplest thing to do is just keep
+    a list of the folders we've already created. While a
+    simple array list could work here, a better data
+    structure already exists: a set! A set is like a list
+    where each item can only be added once, and then you
+    can later on check if some item is within the set.
+</p>
+<p>
+    In JavaScript, a <code>Set</code> is a built-in class,
+    but this is one of those areas where Zig didn't fully
+    have my back. There are hash maps in Zig, but no sets.
+    Fortunately, we can adapt a <code>std.StringHashMap</code>
+    into a decent <code>Set</code> just by using
+    <code>void</code> as the value type!
+</p>
+<pre class="code">
+const Set = std.StringHashMap(void);
+</pre>
+<p>
+    To check if an item is within the set, we can use
+    <code>.contains</code> which returns a boolean.
+    To add something to the set, we can use the
+    <code>.put</code> function. In this case, we need
+    to put <code>void</code>, but writing out the
+    <code>void</code> keyword won't work. The syntax for this
+    is instead <code>.put(string, {})</code>. Since the empty
+    curly brackets just mean "create the default version of
+    whatever is supposed to go here", it creates a
+    <code>void</code> which we can and do safely ignore.
+</p>
+<p>
+    The folder might exist before the program even runs though, so
+    in that case we should just add it to the set and contine as
+    normal. Any other errors should be reported to the user. Here's
+    the complete <code>createDirMaybe</code> function.
+</p>
+<pre class="code">
+fn createDirMaybe(name: []const u8, dir_memory: *Set) !void {
+    if(dir_memory.contains(name)) return;
+    std.debug.print("Creating folder {s}\n", .{ name });
+    fs.cwd().makeDir(name) catch |err| if (err != error.PathAlreadyExists) {
+        return err;
+    };
+    try dir_memory.put(name, {});
+}
+</pre>
+<p>
+    Ah, but wait, we need to initialize the set. Like an array list,
+    this bad boy needs access to dynamic memory, because we don't
+    know how many or how few items will go into it. So, let's hook
+    it up to the heap. I'm choosing an arena allocator because my
+    program runs once, and then exits. There's no need to actually
+    reclaim any memory, so that's what an arena allocator does:
+    it provides memory, but freeing any memory it provides is a
+    no-op. Instead, all the memory gets freed all at once when the
+    allocator is de-initialized. This is perfect for our needs
+    because the simplicity directly translates into performance!
+</p>
+<pre>
+const heap = std.heap;
+
+// ... later in the code,
+
+var arena = heap.ArenaAllocator.init(heap.page_allocator);
+const allocator = arena.allocator();
+var dir_created_set = Set.init(allocator);
+defer dir_created_set.deinit();
+</pre>
+<p>
+    All right, now we have access to dynamic memory allocations.
+    the <code>defer dir_created_set.deinit();</code> is
+    completely optional here, but it doesn't hurt to have. This
+    way, if we for some reason choose to re-use this code or
+    change the way this program runs, we don't forget this
+    typically crucial step.
+</p>
+<h2>Move the file into that folder</h2>
+<p>
+    Finally, the last step. Luckily, this one only really
+    requires two steps.
+</p>
+<ol>
+    <li>Create the new file path</li>
+    <li>Use that file path to execute the move</li>
+</ol>
+<p>
+    The first step, creating the new file path, is where
+    I learned my (so far) favorite new Zig feature,
+    <code>std.fmt.bufPrint</code>. This is similar to c's
+    <code>sprintf(_s)</code>, so it's nice to learn how to
+    perform this always-important task of formatting strings.
+</p>
+<p>
+    Let's take a second to define what our inputs are and
+    what our output should be. We currently have a string
+    for the file name, and also a string for the file type
+    (which is, conveniently, the folder name we're interested in).
+    In between those two things, we need to add a slash like so:
+    <code>(file ext)/(file name)</code>, for example,
+    <code>JPG/test.jpg</code>. We need a character buffer to write
+    this data into, and again we can define this on the stack
+    once and re-use it for the lifetime of the program. This time,
+    the buffer needs to be larger than the first. It's overkill,
+    and wasteful, but I've decided to just be safe and double the
+    smaller buffer's size which leaves me with a 512 byte buffer.
+    It's literally impossible to fill but who is gonna miss those
+    extra few bytes?
+</p>
+<pre class="code">
+var larger_buffer: [512]u8 = undefined;
+
+// ... later in the code,
+
+const new_file_path = fmt.bufPrint(&larger_buffer, "{s}/{s}", .{file_type, file.name})
+    catch |err| {
+        std.debug.print("Error formatting new file path: {}", .{ err });
+        continue;
+    };
+</pre>
+<p>
+    Nice! The last thing to do is actually move the files.
+    For reasons that are cerainly good (though I do not
+    know them), this operation is technically a
+    <code>rename</code>.
+</p>
+<pre class="code">
+fs.cwd().rename(file.name, new_file_path)
+    catch |err| std.debug.print("Error moving file: {}\n", .{ err });
+</pre>
+<h2>And that's it. Here's the full Zig code.</h2>
+<pre class="code">
+const std = @@import("std");
+const heap = std.heap;
+const fs = std.fs;
+const ascii = std.ascii;
+const mem = std.mem;
+const fmt = std.fmt;
+const Set = std.StringHashMap(void);
+
+pub fn main() !void {
+    var dir = try fs.cwd().openDir(".", .{ .iterate = true, .access_sub_paths = false });
+    var iter = dir.iterate();
+    var buffer: [256]u8 = undefined;
+    var larger_buffer: [512]u8 = undefined;
+
+    var arena = heap.ArenaAllocator.init(heap.page_allocator);
+    const allocator = arena.allocator();
+    var dir_created_set = Set.init(allocator);
+    defer dir_created_set.deinit();
+
+    while(try iter.next()) |file| {
+        if(file.kind == .file) {
+            const dot_index_maybe = mem.lastIndexOf(u8, file.name, ".");
+            if(dot_index_maybe) |dot_index| {
+                const file_type = ascii.upperString(&buffer, file.name[dot_index + 1..]);
+                std.debug.print("Found file {s} with type {s}\n", .{ file.name, file_type });
+                createDirMaybe(file_type, &dir_created_set)
+                    catch |err| std.debug.print("Could not create dir: {}\n", .{ err });
+                const new_file_path = fmt.bufPrint(&larger_buffer, "{s}/{s}", .{file_type, file.name})
+                    catch |err| {
+                        std.debug.print("Error formatting new file path: {}", .{ err });
+                        continue;
+                    };
+                std.debug.print("Moving file {s} to {s}\n", .{ file.name, new_file_path });
+                fs.cwd().rename(file.name, new_file_path)
+                    catch |err| std.debug.print("Error moving file: {}\n", .{ err });
+            }
+            else {
+                std.debug.print("Did not move file {s} because it has no extension\n", .{ file.name });
+            }
+        }
+    }
+}
+
+fn createDirMaybe(name: []const u8, dir_memory: *Set) !void {
+    if(dir_memory.contains(name)) return;
+    std.debug.print("Creating folder {s}\n", .{ name });
+    fs.cwd().makeDir(name) catch |err| if (err != error.PathAlreadyExists) {
+        return err;
+    };
+    try dir_memory.put(name, {});
+}
+</pre>
