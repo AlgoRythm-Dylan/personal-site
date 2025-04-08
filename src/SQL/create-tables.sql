@@ -1,3 +1,40 @@
+--
+-- USERS
+--
+
+CREATE TABLE PersonalSite.Accounts (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    DisplayName VARCHAR(64) CHARACTER SET utf8mb4,
+    Username VARCHAR(64) NOT NULL CHARACTER SET utf8mb4,
+    PasswordHash VARCHAR(64) NOT NULL,
+) CHARACTER SET utf8mb4;
+
+--
+-- SESSION
+--
+
+CREATE TABLE PersonalSite.RefreshTokens (
+    Token PRIMARY KEY VARCHAR(64) NOT NULL,
+    AccountID INT NOT NULL,
+    Expiry DATETIME NOT NULL,
+
+    CONSTRAINT FK_RefreshTokens_R_Accounts FOREIGN KEY (AccountID)
+        REFERENCES PersonalSite.Accounts(ID)
+        ON DELETE CASCADE
+);
+
+--
+-- SECURITY
+--
+
+CREATE TABLE PersonalSite.LoginAudit (
+
+);
+
+--
+-- COLOR
+--
+
 CREATE TABLE PersonalSite.PaletteColors (
 	ID INT PRIMARY KEY AUTO_INCREMENT,
 	Red TINYINT UNSIGNED NOT NULL,
@@ -8,6 +45,10 @@ CREATE TABLE PersonalSite.PaletteColors (
 );
 
 CREATE INDEX IDX_PaletteColorsSpacial ON PersonalSite.PaletteColors (Red, Green, Blue);
+
+--
+-- IMAGES
+--
 
 CREATE TABLE PersonalSite.Images (
 	ID INT PRIMARY KEY AUTO_INCREMENT,
