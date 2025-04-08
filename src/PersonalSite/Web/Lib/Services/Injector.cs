@@ -8,6 +8,8 @@ namespace Web.Lib.Services
         public static void AddWebServices(this IServiceCollection services)
         {
             services.AddTransient<AppSettings>();
+            services.AddHttpContextAccessor();
+            services.AddTransient<IJwtService, JwtService>();
         }
     }
 }

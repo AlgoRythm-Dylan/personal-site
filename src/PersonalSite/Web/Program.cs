@@ -1,3 +1,4 @@
+using Web.Lib;
 using Web.Lib.Services;
 
 namespace Web
@@ -7,6 +8,7 @@ namespace Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.SetupJwtAuth();
 
             // Add services to the container.
             builder.Services.AddRazorPages();
@@ -14,6 +16,8 @@ namespace Web
 
             var app = builder.Build();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -21,6 +25,7 @@ namespace Web
             }
 
             app.UseRouting();
+            
 
             app.MapStaticAssets();
             app.MapRazorPages()

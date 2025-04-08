@@ -1,4 +1,4 @@
-﻿namespace Web.Lib.Services.Impl
+﻿namespace Web.Lib.Services
 {
     public class AppSettings
     {
@@ -33,6 +33,30 @@
             get
             {
                 return Config["Application:DefaultPageTitle"];
+            }
+        }
+
+        public string? JwtSecret
+        {
+            get
+            {
+                return Config[AppConstants.JWT_SECRET_CONFIG_KEY];
+            }
+        }
+
+        public int? JwtTokenExpiryMinutes
+        {
+            get
+            {
+                var value = Config["Application:Security:JwtTokenExpiryMinutes"];
+                if(value == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return int.Parse(value);
+                }
             }
         }
     }
