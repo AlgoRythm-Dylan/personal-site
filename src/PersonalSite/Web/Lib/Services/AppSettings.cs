@@ -7,57 +7,66 @@
         {
             Config = config;
         }
-        public string? GuestConnectionString
+        private string GetNonEmptyPropertyOrFail(string key)
         {
-            get
+            string? value = Config[key];
+            if (string.IsNullOrEmpty(value))
             {
-                return Config["Application:GuestConnectionString"];
+                throw new InvalidOperationException($"Required configuration key was missing or empty: {key}");
+            }
+            else
+            {
+                return value;
             }
         }
-        public string? AdminConnectionString
+        private T? GetNullableProperty<T>(string key) where T : struct
         {
-            get
+            var value = Config[key];
+            if (value == null)
             {
-                return Config["Application:AdminConnectionString"];
+                return null;
+            }
+            else
+            {
+                try
+                {
+                    return (T)Convert.ChangeType(value, typeof(T));
+                }
+                catch (Exception ex) when (ex is InvalidCastException || ex is InvalidCastException)
+                {
+                    throw new InvalidOperationException($"Invalid format for configuration key: {key}. Expected {typeof(T)}", ex);
+                }
             }
         }
-        public string? DataLocation
+        public string GuestConnectionString
         {
-            get
-            {
-                return Config["Application:DataLocation"];
-            }
+            get => GetNonEmptyPropertyOrFail("Application:GuestConnectionString");
+        }
+        public string AdminConnectionString
+        {
+            get => GetNonEmptyPropertyOrFail("Application:AdminConnectionString");
+        }
+        public string DataLocation
+        {
+            get => GetNonEmptyPropertyOrFail("Application:DataLocation");
         }
         public string? DefaultPageTitle
         {
-            get
-            {
-                return Config["Application:DefaultPageTitle"];
-            }
+            get => Config["Application:DefaultPageTitle"];
         }
 
-        public string? JwtSecret
+        public string JwtSecret
         {
-            get
-            {
-                return Config[AppConstants.JWT_SECRET_CONFIG_KEY];
-            }
+            get => GetNonEmptyPropertyOrFail(AppConstants.JWT_SECRET_CONFIG_KEY);
         }
-
         public int? JwtTokenExpiryMinutes
         {
-            get
-            {
-                var value = Config["Application:Security:JwtTokenExpiryMinutes"];
-                if(value == null)
-                {
-                    return null;
-                }
-                else
-                {
-                    return int.Parse(value);
-                }
-            }
+            get => GetNullableProperty<int>("Application:Security:JwtTokenExpiryMinutes");
+        }
+
+        public int? RefreshTokenExpiryMinutes
+        {
+            get => GetNullableProperty<int>("Application:Security:RefreshTokenExpiryMinutes");
         }
     }
 }

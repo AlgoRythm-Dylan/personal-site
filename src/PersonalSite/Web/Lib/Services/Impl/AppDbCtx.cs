@@ -2,26 +2,25 @@
 
 namespace Web.Lib.Services.Impl
 {
-    public class AdminCtx : DbContext
+    public abstract class AppDbCtx : DbContext
     {
-        private readonly AppSettings Settings;
-        public AdminCtx(AppSettings settings)
+        private readonly string ConnectionString;
+        public AppDbCtx(string connectionString)
         {
-            Settings = settings;
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new ArgumentNullException(nameof(connectionString));
+            }
+            ConnectionString = connectionString;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
 
-            if(Settings.AdminConnectionString == null)
-            {
-                throw new InvalidOperationException("Critical application setting missing: Application:AdminConnectionString");
-            }
-
             optionsBuilder.UseMySql(
-                Settings.AdminConnectionString,
-                ServerVersion.AutoDetect(Settings.AdminConnectionString));
+                ConnectionString,
+                ServerVersion.AutoDetect(ConnectionString));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

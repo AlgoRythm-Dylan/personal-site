@@ -7,7 +7,7 @@ namespace Web.Lib.Models
     public class RefreshToken
     {
         [Key]
-        public string Token { get; set; }
+        public string Token { get; set; } = Crypto.RandomToken();
         public int AccountID { get; set; }
         public DateTime Expiry { get; set; }
     }
