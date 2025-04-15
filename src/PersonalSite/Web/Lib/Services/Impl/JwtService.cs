@@ -37,11 +37,7 @@ namespace Web.Lib.Services.Impl
         }
         public void WriteToClient(string token)
         {
-            var ctx = HttpContextAccessor.HttpContext;
-            if(ctx == null)
-            {
-                throw new InvalidOperationException("HttpContext was null; this function can only be called in the context of an HTTP request");
-            }
+            var ctx = HttpContextAccessor.HttpContextOrThrow();
             ctx.Response.Cookies.Append(AppConstants.ACCESS_TOKEN_COOKIE_KEY, token, new()
             {
                 SameSite = SameSiteMode.Strict,
