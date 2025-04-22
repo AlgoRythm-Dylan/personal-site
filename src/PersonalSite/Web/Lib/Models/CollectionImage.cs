@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Lib.Models
 {
+    /// <summary>
+    /// Linking table which "adds" a photo to a collection
+    /// </summary>
     [Table("CollectionImages")]
     [PrimaryKey(nameof(ImageID), nameof(CollectionID))]
     public class CollectionImage

@@ -14,8 +14,9 @@ namespace Web.Lib.Services
             services.AddHttpContextAccessor();
 
             services.AddTransient<IJwtService, JwtService>();
+            services.AddTransient<IRefreshTokenService, RefreshTokenService>();
             services.AddTransient<IAccountService, AccountService>();
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<ISessionService, SessionService>();
             services.AddTransient<IObjectViewService, ObjectViewService>();
         }
     }

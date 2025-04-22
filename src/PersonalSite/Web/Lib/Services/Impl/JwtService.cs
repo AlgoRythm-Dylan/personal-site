@@ -11,11 +11,13 @@ namespace Web.Lib.Services.Impl
         private readonly AppSettings Settings;
         private readonly IHttpContextAccessor HttpContextAccessor;
         private readonly IWebHostEnvironment Environment;
-        public JwtService(AppSettings settings, IHttpContextAccessor hca, IWebHostEnvironment env)
+        private readonly IRefreshTokenService RefreshTokenService;
+        public JwtService(AppSettings settings, IHttpContextAccessor hca, IWebHostEnvironment env, IRefreshTokenService rts)
         {
             Settings = settings;
             HttpContextAccessor = hca;
             Environment = env;
+            RefreshTokenService = rts;
         }
 
         public string Generate(string displayName, int accountID)
@@ -44,6 +46,31 @@ namespace Web.Lib.Services.Impl
                 Secure = Environment.IsProduction(),
                 Expires = DateTimeOffset.UtcNow.AddMinutes(Settings.JwtTokenExpiryMinutes ?? AppConstants.DEFAULT_JWT_EXPIRY_MINUTES)
             });
+        }
+
+        public bool IsExpired(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var parsedToken = tokenHandler.ReadToken(token);
+            return parsedToken.ValidTo < DateTime.UtcNow;
+        }
+
+        public string? ReadFromRequest()
+        {
+            var context = HttpContextAccessor.HttpContextOrThrow();
+            return context.Request.Headers[AppConstants.ACCESS_TOKEN_COOKIE_KEY].FirstOrDefault();
+        }
+
+        public async Task CycleForRequestAsync()
+        {
+            var context = HttpContextAccessor.HttpContextOrThrow();
+            var newRefreshToken = await RefreshTokenService.CycleForRequestAsync();
+            if(newRefreshToken is not null)
+            {
+                var newAccessToken = Generate(newRefreshToken.Account.DisplayName ?? newRefreshToken.Account.Username, newRefreshToken.AccountID);
+                WriteToClient(newAccessToken);
+                context.Request.Headers[AppConstants.ACCESS_TOKEN_COOKIE_KEY] = newAccessToken;
+            }
         }
     }
 }

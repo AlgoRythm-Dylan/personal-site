@@ -2,3 +2,11 @@
 @model Web.Pages.Account.SetupModel
 @{
 }
+<form>
+    <label asp-for="@Model.Username"></label>
+    <input asp-for="@Model.Username" />
+    <label asp-for="@Model.Password"></label>
+    <input asp-for="@Model.Password" />
+    <label asp-for="@Model.DisplayName"></label>
+    <input asp-for="@Model.DisplayName" />
+</form>

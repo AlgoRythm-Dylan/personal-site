@@ -12,7 +12,7 @@ CREATE TABLE PersonalSite.Images (
     CaptureDate DATETIME,
     FileName VARCHAR(64) NOT NULL,
     ISO INT,
-    ExposureTimeNumerator INT,
+    ExposureTimeNumerator DEVIMAL(4, 4),
     ExposureTimeDenominator INT,
     Aperature DECIMAL(4, 4),
     

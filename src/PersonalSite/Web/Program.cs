@@ -16,6 +16,7 @@ namespace Web
 
             var app = builder.Build();
 
+            app.UseTokenRefresher();
             app.UseAuthentication();
             app.UseAuthorization();
             // Configure the HTTP request pipeline.

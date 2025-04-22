@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Lib.Models
 {
+    /// <summary>
+    /// All colors from all photos. Two or more photos might share the same color.
+    /// </summary>
     [Table("Colors")]
     public class Color
     {
