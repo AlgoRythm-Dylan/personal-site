@@ -10,5 +10,8 @@ namespace Web.Lib.Models
         public string Token { get; set; } = Crypto.RandomToken();
         public int AccountID { get; set; }
         public DateTime Expiry { get; set; }
+
+        [ForeignKey(nameof(AccountID))]
+        public virtual Account Account { get; set; }
     }
 }

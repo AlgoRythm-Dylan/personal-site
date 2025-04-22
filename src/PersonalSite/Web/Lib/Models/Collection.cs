@@ -3,16 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Lib.Models
 {
-    [Table("Photographers")]
-    public class Photographer
+    [Table("Collections")]
+    public class Collection
     {
         [Key]
         public int ID { get; set; }
         [Required]
-        [MaxLength(64)]
-        public string FirstName { get; set; }
         [MaxLength(128)]
-        public string? LastName { get; set; }
+        public string Name { get; set; }
+
         public DateTime Timestamp { get; set; } = DateTime.Now;
     }
 }

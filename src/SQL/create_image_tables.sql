@@ -1,66 +1,16 @@
---
--- USERS
---
-
-CREATE TABLE PersonalSite.Accounts (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
-    DisplayName VARCHAR(64) CHARACTER SET utf8mb4,
-    Username VARCHAR(64) NOT NULL CHARACTER SET utf8mb4,
-    PasswordHash VARCHAR(64) NOT NULL,
-) CHARACTER SET utf8mb4;
-
---
--- SESSION
---
-
-CREATE TABLE PersonalSite.RefreshTokens (
-    Token PRIMARY KEY VARCHAR(64) NOT NULL,
-    AccountID INT NOT NULL,
-    Expiry DATETIME NOT NULL,
-
-    CONSTRAINT FK_RefreshTokens_R_Accounts FOREIGN KEY (AccountID)
-        REFERENCES PersonalSite.Accounts(ID)
-        ON DELETE CASCADE
-);
-
---
--- SECURITY
---
-
-CREATE TABLE PersonalSite.LoginAudit (
-
-);
-
---
--- COLOR
---
-
-CREATE TABLE PersonalSite.PaletteColors (
-	ID INT PRIMARY KEY AUTO_INCREMENT,
-	Red TINYINT UNSIGNED NOT NULL,
-	Green TINYINT UNSIGNED NOT NULL,
-	Blue TINYINT UNSIGNED NOT NULL,
-    
-    CONSTRAINT C_PaletteColorsUnique UNIQUE (Red, Green, Blue)
-);
-
-CREATE INDEX IDX_PaletteColorsSpacial ON PersonalSite.PaletteColors (Red, Green, Blue);
-
---
--- IMAGES
---
+-- IMAGE ITEMS
 
 CREATE TABLE PersonalSite.Images (
-	ID INT PRIMARY KEY AUTO_INCREMENT,
+    ID INT PRIMARY KEY AUTO_INCREMENT,
     Title VARCHAR(256) CHARACTER SET utf8mb4,
     Description VARCHAR(2048) CHARACTER SET utf8mb4,
-    ViewCount INT NOT NULL DEFAULT 0,
-    Width INT NOT NULL,
-    Height INT NOT NULL,
+    AlterationsDescription VARCHAR(1024) CHARACTER SET utf8mb4,
+    NoAlterations TINYINT DEFAULT NULL,
+    SourceWidth INT NOT NULL,
+    SourceHeight INT NOT NULL,
     Brightness INT NOT NULL,
     CaptureDate DATETIME,
     FileName VARCHAR(64) NOT NULL,
-    IsHDR INT NOT NULL DEFAULT 0,
     ISO INT,
     ExposureTimeNumerator INT,
     ExposureTimeDenominator INT,
@@ -81,32 +31,24 @@ CREATE TABLE PersonalSite.ImageViews (
 
 CREATE TABLE PersonalSite.ImageColors (
     ImageID INT NOT NULL,
-    PaletteColorID INT NOT NULL,
+    ColorID INT NOT NULL,
 
     CONSTRAINT FK_ImageColors_R_Images
         FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
         ON DELETE CASCADE,
-    CONSTRAINT FK_ImageColors_R_Colors FOREIGN KEY (PaletteColorID)
-        REFERENCES PersonalSite.PaletteColors (ID)
+    CONSTRAINT FK_ImageColors_R_Colors FOREIGN KEY (ColorID)
+        REFERENCES PersonalSite.Colors (ID)
         ON DELETE CASCADE
 );
 
-CREATE TABLE PersonalSite.ImageSizes (
-    ImageID INT NOT NULL,
-    Width INT NOT NULL,
-    Height INT NOT NULL,
-
-    CONSTRAINT FK_ImageSizes_R_Images
-        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
-        ON DELETE CASCADE
-);
+-- SUBJECTS
 
 CREATE TABLE PersonalSite.Subjects (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     ParentID INT DEFAULT NULL,
     Name VARCHAR(128) CHARACTER SET utf8mb4,
 
-    CreatedDate DATETIME NOT NULL DEFAULT NOW(),
+    Timestamp DATETIME NOT NULL DEFAULT NOW(),
     DeletedDate DATETIME DEFAULT NULL,
 
     CONSTRAINT FK_Subjects_R_Parent
@@ -119,7 +61,7 @@ CREATE TABLE PersonalSite.ImageSubjects (
     SubjectID INT NOT NULL,
     QuantityBucket INT NOT NULL,
     IsPrimarySubject TINYINT NOT NULL,
-    DateAdded DATETIME NOT NULL DEFAULT NOW(),
+    Timestamp DATETIME NOT NULL DEFAULT NOW(),
 
     CONSTRAINT FK_ImgSubj_R_Image
         FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
@@ -129,17 +71,19 @@ CREATE TABLE PersonalSite.ImageSubjects (
         ON DELETE CASCADE
 );
 
+-- ATTRIBUTION
+
 CREATE TABLE PersonalSite.Photographers (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     FirstName VARCHAR(64) CHARACTER SET utf8mb4,
     LastName VARCHAR(128) CHARACTER SET utf8mb4
-    DateAdded DATETIME NOT NULL DEFAULT NOW()
+    Timestamp DATETIME NOT NULL DEFAULT NOW()
 ) CHARACTER SET utf8mb4;
 
 CREATE TABLE PersonalSite.ImagePhotographers (
     ImageID INT NOT NULL,
     PhotographerID INT NOT NULL,
-    DateAdded DATETIME NOT NULL DEFAULT NOW(),
+    Timestamp DATETIME NOT NULL DEFAULT NOW(),
 
     CONSTRAINT FK_ImgPhotog_R_Img
         FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)
@@ -149,11 +93,12 @@ CREATE TABLE PersonalSite.ImagePhotographers (
         ON DELETE CASCADE
 );
 
+-- CURATION
 
 CREATE TABLE PersonalSite.Collections (
     ID INT PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(64) CHARACTER SET utf8mb4,
-    DateAdded DATETIME NOT NULL DEFAULT NOW()
+    Name VARCHAR(128) CHARACTER SET utf8mb4,
+    Timestamp DATETIME NOT NULL DEFAULT NOW()
 ) CHARACTER SET utf8mb4;
 
 CREATE TABLE PersonalSite.CollectionImages (
@@ -167,10 +112,3 @@ CREATE TABLE PersonalSite.CollectionImages (
         FOREIGN KEY (CollectionID) REFERENCES PersonalSite.Collections (ID)
         ON DELETE CASCADE
 );
-
-CREATE TABLE PersonalSite.PageViews (
-    PageName VARCHAR(64) CHARACTER SET utf8mb4,
-    Timestamp DATETIME NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IDX_PageViewName ON PersonalSite.PageViews (PageName);

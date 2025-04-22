@@ -9,7 +9,7 @@ namespace Web.Lib.Models
     {
         public int ImageID { get; set; }
         public int PhotographerID { get; set; }
-        public DateTime DateAdded { get; set; } = DateTime.Now;
+        public DateTime Timestamp { get; set; } = DateTime.Now;
 
         [ForeignKey(nameof(PhotographerID))]
         public virtual Photographer Photographer { get; set; }

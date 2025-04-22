@@ -2,6 +2,7 @@
 CREATE USER 'PersonalSiteViewer'@'%' IDENTIFIED BY '<password>';
 GRANT SELECT ON PersonalSite.* TO PersonalSiteViewer;
 GRANT INSERT ON PersonalSite.ImageViews TO PersonalSiteViewer;
+GRANT INSERT ON PersonalSite.PageViews TO PersonalSiteViewer;
 
 -- User for the management portal, which needs to be granted more
 -- powerful permissions but should not have DDL permissions nor

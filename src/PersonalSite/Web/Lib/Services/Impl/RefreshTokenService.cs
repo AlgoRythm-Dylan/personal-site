@@ -5,13 +5,17 @@ namespace Web.Lib.Services.Impl
 {
     public class RefreshTokenService : IRefreshTokenService
     {
-        private readonly 
         public Task<RefreshToken> GenerateForAsync(int accountID)
         {
             throw new NotImplementedException();
         }
 
         public Task InvalidateAsync(string token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync(RefreshToken token)
         {
             throw new NotImplementedException();
         }

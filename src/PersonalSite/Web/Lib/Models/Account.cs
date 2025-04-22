@@ -8,7 +8,10 @@ namespace Web.Lib.Models
     {
         [Key]
         public int ID { get; set; }
+        [MaxLength(64)]
         public string? DisplayName { get; set; }
+        [Required]
+        [MaxLength(64)]
         public string Username { get; set; }
         public string PasswordHash { get; set; }
     }

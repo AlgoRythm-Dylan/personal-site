@@ -38,7 +38,7 @@
                 }
             }
         }
-        public string GuestConnectionString
+        public string ViewerConnectionString
         {
             get => GetNonEmptyPropertyOrFail("Application:GuestConnectionString");
         }
@@ -67,6 +67,10 @@
         public int? RefreshTokenExpiryMinutes
         {
             get => GetNullableProperty<int>("Application:Security:RefreshTokenExpiryMinutes");
+        }
+        public string Salt
+        {
+            get => GetNonEmptyPropertyOrFail("Application:Security:Salt");
         }
     }
 }
