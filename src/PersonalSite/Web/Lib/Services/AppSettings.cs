@@ -40,7 +40,7 @@
         }
         public string ViewerConnectionString
         {
-            get => GetNonEmptyPropertyOrFail("Application:GuestConnectionString");
+            get => GetNonEmptyPropertyOrFail("Application:ViewerConnectionString");
         }
         public string AdminConnectionString
         {

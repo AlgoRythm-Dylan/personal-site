@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Lib.Models
 {
     [Table("ImageViews")]
+    [Keyless]
     public class ImageView
     {
         public int ImageID { get; set; }

@@ -1,5 +1,5 @@
 CREATE TABLE PersonalSite.RefreshTokens (
-    Token PRIMARY KEY VARCHAR(64) NOT NULL,
+    Token VARCHAR(64) PRIMARY KEY,
     AccountID INT NOT NULL,
     Expiry DATETIME NOT NULL,
 
