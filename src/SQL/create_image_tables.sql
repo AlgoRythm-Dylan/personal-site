@@ -1,7 +1,7 @@
 -- IMAGE ITEMS
 
 CREATE TABLE PersonalSite.Images (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
+    ID VARCHAR(32) PRIMARY KEY,
     Title VARCHAR(256) COLLATE utf8mb4_bin,
     Description VARCHAR(2048) COLLATE utf8mb4_bin,
     AlterationsDescription VARCHAR(1024) COLLATE utf8mb4_bin,
@@ -10,6 +10,7 @@ CREATE TABLE PersonalSite.Images (
     SourceHeight INT NOT NULL,
     Brightness INT NOT NULL,
     CaptureDate DATETIME,
+    IsUnlisted TINTYINT DEFAULT 0 NOT NULL,
     FileName VARCHAR(64) NOT NULL,
     ISO INT,
     ExposureTimeNumerator DECIMAL(4, 4),
@@ -96,8 +97,10 @@ CREATE TABLE PersonalSite.ImagePhotographers (
 -- CURATION
 
 CREATE TABLE PersonalSite.Collections (
-    ID INT PRIMARY KEY AUTO_INCREMENT,
+    ID VARCHAR(32) PRIMARY KEY,
     Name VARCHAR(128) COLLATE utf8mb4_bin,
+    Description VARCHAR(1024),
+    IsUnlisted TINTYINT DEFAULT 0 NOT NULL,
     Timestamp DATETIME NOT NULL DEFAULT NOW()
 ) CHARACTER SET = utf8mb4;
 

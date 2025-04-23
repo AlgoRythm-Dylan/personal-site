@@ -19,12 +19,12 @@
                 return value;
             }
         }
-        private T? GetNullableProperty<T>(string key) where T : struct
+        private T? GetNullableProperty<T>(string key)
         {
             var value = Config[key];
             if (value == null)
             {
-                return null;
+                return default;
             }
             else
             {
@@ -71,6 +71,10 @@
         public string Salt
         {
             get => GetNonEmptyPropertyOrFail("Application:Security:Salt");
+        }
+        public string? NavbarTitle
+        {
+            get => GetNullableProperty<string>("Application:NavbarTitle");
         }
     }
 }

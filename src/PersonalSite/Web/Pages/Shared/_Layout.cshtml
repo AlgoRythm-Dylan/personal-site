@@ -6,17 +6,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @if(ViewData["Title"] == null){
-        <title>Perunko Portfolio</title>
+            <title>@(Settings.DefaultPageTitle ?? "Personal Site")</title>
     }
     else {
         <title>@ViewData["Title"] - @(Settings.DefaultPageTitle ?? "Personal Site")</title>
     }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
 
-    @RenderBody()
+    <div id="header" class="glow">
+        <h2 class="uniform-spacing-lg">
+            <a class="undecorated-link" href="~/">
+                @(Settings.NavbarTitle ?? "My Website")
+            </a>
+        </h2>
+    </div>
+
+    <div id="body-content">
+        @RenderBody()
+    </div>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/image.js" asp-append-version="true"></script>

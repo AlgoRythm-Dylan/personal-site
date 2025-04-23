@@ -1,0 +1,106 @@
+﻿/* LIGHT / DEFAULT THEME */
+:root {
+    /* generic */
+    --body-bg: rgb(250, 250, 255);
+    --color: rgb(60, 60, 60);
+    --spacing: 0.5em;
+    --spacing-lg: 1em;
+    --rounding-sm: 0.3pc;
+    --rounding: 0.6pc;
+    --header-bg: white;
+    /* fonts */
+    --font: "Inter", sans-serif;
+    --title-font: "Lexend Deca", sans-serif;
+    /* borders */
+    --border: solid rgb(230, 230, 230) 1px;
+    --border-strong: solid rgb(215, 215, 215) 1px;
+    --border-focus: solid var(--accent-color) 1px;
+    /* outline */
+    --outline-focus: solid var(--accent-color) 3px;
+    /* glow */
+    --glow-color: rgba(159, 175, 224, 1);
+    --glow-shadow: 0px 10px 20px -12px var(--glow-color);
+    --glow-shadow-strong: 0px 10px 102px -12px var(--glow-color);
+    /* text */
+    --accent-color: rgb(0, 139, 209);
+    --accent-color-hover: rgb(0, 166, 250);
+    /* panel */
+    --panel-bg: white;
+    /* inputs */
+    --input-bg: rgb(245, 245, 245);
+}
+/* DARK THEME */
+html[theme='dark']:root {
+
+}
+
+/* elements */
+* {
+    font-family: var(--font);
+}
+body {
+    background: var(--body-bg);
+    color: var(--color);
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--title-font);
+}
+pre, code {
+    font-family: monospace;
+}
+pre, code {
+    border: var(--border-strong);
+}
+button, input, select, textarea {
+    padding: var(--spacing);
+    border-radius: var(--rounding-sm);
+    box-sizing: border-box;
+}
+button:focus, input:focus, select:focus, textarea:focus {
+    outline: none;
+}
+input:focus, select:focus, textarea:focus {
+    outline: var(--outline-focus);
+}
+button, input, textarea, select {
+    border: none;
+}
+button, input, select, textarea {
+    background: var(--input-bg);
+}
+a {
+    color: var(--accent-color);
+}
+a:hover {
+    color: var(--accent-color-hover);
+}
+
+/* classes */
+.panel {
+    background: var(--panel-bg);
+    padding: var(--spacing);
+    display: flex;
+    flex-direction: column;
+}
+.glow {
+    box-shadow: var(--glow-shadow);
+}
+.uniform-spacing {
+    padding: 0px;
+    margin: var(--spacing);
+}
+.uniform-spacing-lg {
+    padding: 0px;
+    margin: var(--spacing-lg);
+}
+.undecorated-link {
+    color: var(--color);
+    text-decoration: none;
+}
+.undecorated-link:hover, .undecorated-link:active {
+    color: var(--color);
+}
+.border {
+    border: var(--border);
+}

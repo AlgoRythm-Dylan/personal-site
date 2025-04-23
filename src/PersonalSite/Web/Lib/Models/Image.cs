@@ -7,7 +7,7 @@ namespace Web.Lib.Models
     public class Image
     {
         [Key]
-        public int ID { get; set; }
+        public string ID { get; set; } = Crypto.RandomToken();
         /// <summary>
         /// The publicly visible work title.
         /// </summary>
@@ -44,6 +44,11 @@ namespace Web.Lib.Models
         /// The date the image was captured.
         /// </summary>
         public DateTime? CaptureDate { get; set; } = null;
+        /// <summary>
+        /// Unlisted images only show up for those with the link
+        /// or in collections which are ALSO unlisted
+        /// </summary>
+        public int IsUnlisted { get; set; } = 0;
         /// <summary>
         /// Auto-generated file name (without extension). As different sizes
         /// are generated, they are added to the file name. Original: abc123.jpg,

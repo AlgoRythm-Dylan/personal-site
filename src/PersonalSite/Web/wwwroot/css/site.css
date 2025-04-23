@@ -1,9 +1,23 @@
-html {
+html, body {
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+html, button, input, textarea, select {
   font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html, button, input, textarea, select {
+        font-size: 16px;
+    }
+}
+
+#header {
+    position: sticky;
+    top: 0px;
+    width: 100%;
+    background: var(--header-bg);
+    border-bottom: var(--border);
 }
