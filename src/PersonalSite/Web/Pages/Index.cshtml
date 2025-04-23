@@ -1,6 +1,15 @@
 ﻿@page
 @model IndexModel
+@inject IAccountService AccountService
 @{
     ViewData["Title"] = "Home page";
 }
 <p>Test!</p>
+
+@if(await AccountService.NoAccountsExistAsync())
+{
+    <p>
+        Looks like the site hasn't been set up yet. Click
+        <a href="~/Account/Setup">here</a> to begin.
+    </p>
+}
