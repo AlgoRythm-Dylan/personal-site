@@ -11,7 +11,8 @@ CREATE TABLE PersonalSite.Images (
     Brightness INT NOT NULL,
     CaptureDate DATETIME,
     IsUnlisted TINTYINT DEFAULT 0 NOT NULL,
-    FileName VARCHAR(64) NOT NULL,
+    SystemFileName VARCHAR(64) NOT NULL,
+    OriginalFileName VARCHAR(64),
     ISO INT,
     ExposureTimeNumerator DECIMAL(4, 4),
     ExposureTimeDenominator INT,
@@ -113,5 +114,17 @@ CREATE TABLE PersonalSite.CollectionImages (
         ON DELETE CASCADE,
     CONSTRAINT FK_CollecImg_R_Collec
         FOREIGN KEY (CollectionID) REFERENCES PersonalSite.Collections (ID)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE PersonalSite.ImageAttachments (
+    FileID VARCHAR(32) NOT NULL,
+    ImageID VARCHAR(32) NOT NULL,
+
+    CONSTRAINT FK_ImageAtt_R_Files
+        FOREIGN KEY (FileID) REFERENCES PersonalSite.Files(ID)
+        ON DELETE CASCADE,
+    CONSTRAINT FK_ImageAtt_R_Img
+        FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images(ID)
         ON DELETE CASCADE
 );

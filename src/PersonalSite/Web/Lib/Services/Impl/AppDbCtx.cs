@@ -28,6 +28,8 @@ namespace Web.Lib.Services.Impl
         public DbSet<ImagePhotographer> ImagePhotographers { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<CollectionImage> CollectionImages { get; set; }
+        public DbSet<Models.File> Files { get; set; }
+        public DbSet<ImageAttachment> ImageAttachments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

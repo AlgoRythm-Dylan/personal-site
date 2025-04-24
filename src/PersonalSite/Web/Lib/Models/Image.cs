@@ -54,7 +54,11 @@ namespace Web.Lib.Models
         /// are generated, they are added to the file name. Original: abc123.jpg,
         /// thumbnail: abc123.thumb.jpg, medium: ac123.med.jpg
         /// </summary>
-        public string FileName { get; set; } = Guid.NewGuid().ToString();
+        public string SystemFileName { get; set; } = Guid.NewGuid().ToString();
+        /// <summary>
+        /// The original name of the uploaded file, if applicable
+        /// </summary>
+        public string? OriginalFileName { get; set; }
         /// <summary>
         /// Optional ISO level
         /// </summary>

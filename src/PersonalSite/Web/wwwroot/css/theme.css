@@ -1,13 +1,13 @@
 ﻿/* LIGHT / DEFAULT THEME */
 :root {
     /* generic */
-    --body-bg: rgb(250, 250, 255);
+    --body-bg: rgb(255, 245, 238);
     --color: rgb(60, 60, 60);
     --spacing: 0.5em;
     --spacing-lg: 1em;
-    --rounding-sm: 0.3pc;
+    --rounding-sm: 0px;
     --rounding: 0.6pc;
-    --header-bg: white;
+    --header-bg: rgba(255, 245, 238, 0.7);
     /* fonts */
     --font: "Inter", sans-serif;
     --title-font: "Lexend Deca", sans-serif;
@@ -28,12 +28,44 @@
     --panel-bg: white;
     /* inputs */
     --input-bg: rgb(245, 245, 245);
+    /* buttons */
+    --button-bg: #e9967a;
+    --button-color: white;
 }
 /* DARK THEME */
 html[theme='dark']:root {
-
+    
 }
 
+html[theme='purple-light']:root {
+    --body-bg: #f8f8ff;
+    --button-bg: #483d8b;
+    --header-bg: #f8f8ff;
+}
+
+html[theme='purple-dark']:root {
+    --body-bg: #e6e6fa;
+    --button-bg:  #2f4f4f;
+    --header-bg: #e6e6fa;
+}
+
+html[theme='green-light']:root {
+    --body-bg: #f5fffa;
+    --button-bg: #5f9ea0;
+    --header-bg: #f5fffa;
+}
+
+html[theme='green-dark']:root {
+    --body-bg: #f0fff0;
+    --button-bg: #2f4f4f;
+    --header-bg: #f0fff0;
+}
+
+html[theme='blue']:root {
+    --body-bg: #f0f8ff;
+    --button-bg: #6495ed;
+    --header-bg: #f0f8ff;
+}
 /* elements */
 * {
     font-family: var(--font);
@@ -74,6 +106,10 @@ a {
 }
 a:hover {
     color: var(--accent-color-hover);
+}
+button {
+    background: var(--button-bg);
+    color: var(--button-color);
 }
 
 /* classes */

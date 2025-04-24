@@ -72,9 +72,5 @@
         {
             get => GetNonEmptyPropertyOrFail("Application:Security:Salt");
         }
-        public string? NavbarTitle
-        {
-            get => GetNullableProperty<string>("Application:NavbarTitle");
-        }
     }
 }
