@@ -4,12 +4,108 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<p>Test!</p>
 
-@if(await AccountService.NoAccountsExistAsync())
-{
-    <p>
-        Looks like the site hasn't been set up yet. Click
-        <a href="~/Account/Setup">here</a> to begin.
-    </p>
+<div id="personal-jumbotron" class="colorless-panel strong-border strong-border-fade">
+    <h1 class="impact no-spacing">DYLAN PERUNKO</h1>
+    <div id="jumbotron-split-panel">
+        <div id="lies-and-truths">
+            <p>Photographer,</p>
+            <p>Software developer,</p>
+            <p data-lie="true"></p>
+            <p data-lie="true"></p>
+            <p>Hiking enthusiast,</p>
+            <p data-lie="true"></p>
+            <p>Liar.</p>
+        </div>
+        <div id="jumbotron-image"></div>
+    </div>
+</div>
+
+<div class="panel">
+    @if(User.IsAuthenticated()){
+        <p>Hello @User.Identity.Name!</p>
+    }
+
+    @if(await AccountService.NoAccountsExistAsync())
+    {
+        <p>
+            Looks like the site hasn't been set up yet. Click
+            <a href="~/Account/Setup">here</a> to begin.
+        </p>
+    }
+</div>
+
+@section Styles {
+    <style>
+        #personal-jumbotron {
+            margin: 3%;
+            position: relative;
+            height: 85%;
+            flex-shrink: 0;
+        }
+        #personal-jumbotron .impact {
+            font-size: 13vw;
+            line-height: 1;
+            text-align: right;
+        }
+
+        #jumbotron-split-panel {
+            display: flex;
+            flex: 1;
+            justify-content: end;
+            margin-top: 
+        }
+
+        #jumbotron-image {
+            background-image: url("/images/homepage_jumbotron_image.jpg");
+            background-position: center center;
+            width: 70%;
+        }
+        #lies-and-truths {
+            margin-top: auto;
+            margin-bottom: auto;
+            text-align: right;
+            margin-right: var(--spacing);
+        }
+        #lies-and-truths > p {
+            margin: 0px;
+            padding: 0px;
+            font-family: var(--monospace-font);
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        const LIES = [
+            "Billionaire",
+            "First man on the Moon",
+            "Heavyweight champion",
+            "Creator of the Furby",
+            "Discoverer of Madagascar",
+            "262nd pope",
+            "Head boy, Hufflepuff, 1983",
+            "Author, \"The Lord of the Rings\"",
+            "Founder of the Ford Motor Company",
+            "American Airlines no-fly list (twice)",
+            "First to summit Everest",
+            "Alaskan crab fisherman",
+            "Producer, \"Interstellar\" (2014)",
+            "Heir to the throne of Uzbekistan",
+            "Plague Doctor",
+            "Suspended license (7 states)"
+        ];
+
+        addEventListener("load", () => {
+            populateLies();
+        });
+
+        function populateLies(){
+            document.querySelectorAll("[data-lie]").forEach(el => {
+                const lie = LIES.splice(Math.floor(Math.random() * LIES.length), 1);
+                el.innerHTML = `${lie},`;
+            });
+        }
+
+    </script>
 }

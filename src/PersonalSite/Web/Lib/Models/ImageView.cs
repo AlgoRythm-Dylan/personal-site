@@ -7,7 +7,7 @@ namespace Web.Lib.Models
     [Keyless]
     public class ImageView
     {
-        public int ImageID { get; set; }
+        public string ImageID { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
 
         [ForeignKey(nameof(ImageID))]

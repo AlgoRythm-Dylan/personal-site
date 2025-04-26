@@ -12,12 +12,14 @@ namespace Web.Lib.Services.Impl
         private readonly ViewerDbCtx Ctx;
         private readonly IJwtService JwtService;
         private readonly IRefreshTokenService RefreshTokenService;
-        public SessionService(AppSettings settings, ViewerDbCtx ctx, IJwtService jwtService, IRefreshTokenService rts)
+        private readonly IHttpContextAccessor HttpContextAccessor;
+        public SessionService(AppSettings settings, ViewerDbCtx ctx, IJwtService jwtService, IRefreshTokenService rts, IHttpContextAccessor hca)
         {
             Settings = settings;
             Ctx = ctx;
             JwtService = jwtService;
             RefreshTokenService = rts;
+            HttpContextAccessor = hca;
         }
 
         public string HashPassword(string password)
@@ -71,8 +73,20 @@ namespace Web.Lib.Services.Impl
             }
             else
             {
-                
+                // TODO
             }
+        }
+
+        public async Task LogoutAsync()
+        {
+            var context = HttpContextAccessor.HttpContextOrThrow();
+            var refreshToken = context.Request.Cookies[AppConstants.REFRESH_TOKEN_COOKIE_KEY];
+            if(refreshToken is not null)
+            {
+                await RefreshTokenService.InvalidateAsync(refreshToken);
+            }
+            context.Response.Cookies.Delete(AppConstants.REFRESH_TOKEN_COOKIE_KEY);
+            context.Response.Cookies.Delete(AppConstants.ACCESS_TOKEN_COOKIE_KEY);
         }
     }
 }

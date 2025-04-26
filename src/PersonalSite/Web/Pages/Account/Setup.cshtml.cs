@@ -17,13 +17,16 @@ namespace Web.Pages.Account
         [BindProperty]
         [Required]
         [MaxLength(64)]
+        [Display(Name = "Login Username", Prompt = "jsmith")]
         public string Username { get; set; }
         [BindProperty]
         [Required]
-        [PasswordPropertyText]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password", Prompt = "hunter2")]
         public string Password { get; set; }
         [BindProperty]
         [MaxLength(64)]
+        [Display(Name = "Display Name", Prompt = "John Smith")]
         public string DisplayName { get; set; }
 
         public async Task<ActionResult> OnGet()

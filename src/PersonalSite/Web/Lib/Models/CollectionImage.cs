@@ -11,8 +11,8 @@ namespace Web.Lib.Models
     [PrimaryKey(nameof(ImageID), nameof(CollectionID))]
     public class CollectionImage
     {
-        public int ImageID { get; set; }
-        public int CollectionID { get; set; }
+        public string ImageID { get; set; }
+        public string CollectionID { get; set; }
 
         [ForeignKey(nameof(ImageID))]
         public virtual Image Image { get; set; }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Web.Lib;
 using Web.Lib.Services.Spec;
 
 namespace Web.Pages.Account
@@ -14,6 +15,10 @@ namespace Web.Pages.Account
 
         public async Task<ActionResult> OnGet()
         {
+            if (User.IsAuthenticated())
+            {
+                return Redirect("~/");
+            }
             if(await AccountService.NoAccountsExistAsync())
             {
                 return Redirect("Setup");

@@ -11,7 +11,11 @@ namespace Web
             builder.SetupJwtAuth();
 
             // Add services to the container.
-            builder.Services.AddRazorPages();
+            builder.Services.AddRazorPages()
+                            .AddViewOptions(options =>
+                            {
+                                options.HtmlHelperOptions.ClientValidationEnabled = false;
+                            });
             builder.Services.AddWebServices();
 
             var app = builder.Build();

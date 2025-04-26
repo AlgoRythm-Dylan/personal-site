@@ -8,5 +8,6 @@ namespace Web.Lib.Services.Spec
         public Task<Account?> LoginAsync(string username, string password);
         public Task CreateSessionAsAsync(Account account);
         public Task CycleTokensIfNecessary();
+        public Task LogoutAsync();
     }
 }

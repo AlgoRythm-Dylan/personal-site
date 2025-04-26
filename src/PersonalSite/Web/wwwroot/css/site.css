@@ -1,4 +1,4 @@
-html, body {
+html, body, form {
     margin: 0px;
     display: flex;
     flex-direction: column;
@@ -14,16 +14,28 @@ html, button, input, textarea, select {
     }
 }
 
+html, body {
+    height: 100%;
+    min-height: 0px;
+    overflow: hidden;
+}
+
 #header {
-    position: sticky;
-    top: 0px;
-    width: 100%;
     display: flex;
-    backdrop-filter: blur(2px);
-    background: var(--header-bg);
 }
 #header > * {
     flex: 1;
     text-align: center;
     flex-basis: 0;
+}
+
+#body-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-x: auto;
+}
+
+form > label {
+    margin: var(--spacing) 0px;
 }

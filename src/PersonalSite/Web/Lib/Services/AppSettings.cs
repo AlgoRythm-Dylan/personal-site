@@ -46,9 +46,9 @@
         {
             get => GetNonEmptyPropertyOrFail("Application:AdminConnectionString");
         }
-        public string DataLocation
+        public string FilesPath
         {
-            get => GetNonEmptyPropertyOrFail("Application:DataLocation");
+            get => GetNonEmptyPropertyOrFail("Application:FilesPath");
         }
         public string? DefaultPageTitle
         {

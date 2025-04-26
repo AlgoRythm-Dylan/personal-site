@@ -7,11 +7,11 @@ namespace Web.Lib.Services.Impl
     public class AccountService : IAccountService
     {
         private readonly AdminDbCtx Ctx;
-        private readonly ISessionService LoginService;
+        private readonly ISessionService SessionService;
         public AccountService(AdminDbCtx ctx, ISessionService loginService)
         {
             Ctx = ctx;
-            LoginService = loginService;
+            SessionService = loginService;
         }
 
         public async Task<bool> NoAccountsExistAsync()
@@ -23,11 +23,13 @@ namespace Web.Lib.Services.Impl
         {
             var newRecord = new Account()
             {
-                PasswordHash = LoginService.HashPassword(password),
+                PasswordHash = SessionService.HashPassword(password),
                 DisplayName = displayName,
                 Username = username
             };
             await Ctx.Accounts.AddAsync(newRecord);
+            await Ctx.SaveChangesAsync();
+            await SessionService.CreateSessionAsAsync(newRecord);
             return newRecord;
         }
     }

@@ -2,11 +2,23 @@
 @model Web.Pages.Account.SetupModel
 @{
 }
-<form>
-    <label asp-for="@Model.Username"></label>
-    <input asp-for="@Model.Username" />
-    <label asp-for="@Model.Password"></label>
-    <input asp-for="@Model.Password" />
-    <label asp-for="@Model.DisplayName"></label>
-    <input asp-for="@Model.DisplayName" />
-</form>
+<div class="panel constrained">
+
+    <h1>Setup</h1>
+    <p>
+        Since this site doesn't have any accounts yet,
+        you can use this page to create one. This page
+        won't be accessible after you create an account here.
+    </p>
+
+    <form method="post">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" />
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <label asp-for="DisplayName"></label>
+        <input asp-for="DisplayName" />
+
+        <button type="submit" class="large-top-spacing">Done</button>
+    </form>
+</div>

@@ -7,7 +7,7 @@ namespace Web.Lib.Models
     [PrimaryKey(nameof(ImageID), nameof(PhotographerID))]
     public class ImagePhotographer
     {
-        public int ImageID { get; set; }
+        public string ImageID { get; set; }
         public int PhotographerID { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
 

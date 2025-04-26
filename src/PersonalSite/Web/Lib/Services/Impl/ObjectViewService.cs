@@ -23,7 +23,7 @@ namespace Web.Lib.Services.Impl
             await Ctx.SaveChangesAsync();
         }
 
-        public async Task RecordImageViewAsync(int imageID)
+        public async Task RecordImageViewAsync(string imageID)
         {
             var newRecord = new ImageView()
             {
@@ -39,7 +39,7 @@ namespace Web.Lib.Services.Impl
             return Ctx.PageViews.CountAsync(view => view.PageName == pageName);
         }
 
-        public Task<int> GetImageTotalViewsAsync(int imageID)
+        public Task<int> GetImageTotalViewsAsync(string imageID)
         {
             return Ctx.ImageViews.CountAsync(img => img.ImageID == imageID);
         }

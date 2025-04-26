@@ -7,7 +7,7 @@ namespace Web.Lib.Models
     [PrimaryKey(nameof(ImageID), nameof(ColorID))]
     public class ImageColor
     {
-        public int ImageID { get; set; }
+        public string ImageID { get; set; }
         public int ColorID { get; set; }
 
         [ForeignKey(nameof(ImageID))]

@@ -10,20 +10,20 @@ CREATE TABLE PersonalSite.Images (
     SourceHeight INT NOT NULL,
     Brightness INT NOT NULL,
     CaptureDate DATETIME,
-    IsUnlisted TINTYINT DEFAULT 0 NOT NULL,
+    IsUnlisted TINYINT DEFAULT 0 NOT NULL,
     SystemFileName VARCHAR(64) NOT NULL,
     OriginalFileName VARCHAR(64),
     ISO INT,
-    ExposureTimeNumerator DECIMAL(4, 4),
+    ExposureTimeNumerator DECIMAL(6, 1),
     ExposureTimeDenominator INT,
-    Aperature DECIMAL(4, 4),
+    Aperature DECIMAL(6, 1),
     
     UploadDate DATETIME NOT NULL DEFAULT NOW(),
     DeletedDate DATETIME DEFAULT NULL
 ) CHARACTER SET = utf8mb4;
 
 CREATE TABLE PersonalSite.ImageViews (
-    ImageID INT NOT NULL,
+    ImageID VARCHAR(32) NOT NULL,
     Timestamp DATETIME NOT NULL DEFAULT NOW(),
 
     CONSTRAINT FK_ImageViews_R_Images
@@ -32,7 +32,7 @@ CREATE TABLE PersonalSite.ImageViews (
 );
 
 CREATE TABLE PersonalSite.ImageColors (
-    ImageID INT NOT NULL,
+    ImageID VARCHAR(32) NOT NULL,
     ColorID INT NOT NULL,
 
     CONSTRAINT FK_ImageColors_R_Images
@@ -59,7 +59,7 @@ CREATE TABLE PersonalSite.Subjects (
 ) CHARACTER SET = utf8mb4;
 
 CREATE TABLE PersonalSite.ImageSubjects (
-    ImageID INT NOT NULL,
+    ImageID VARCHAR(32) NOT NULL,
     SubjectID INT NOT NULL,
     QuantityBucket INT NOT NULL,
     IsPrimarySubject TINYINT NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE PersonalSite.Photographers (
 ) CHARACTER SET = utf8mb4;
 
 CREATE TABLE PersonalSite.ImagePhotographers (
-    ImageID INT NOT NULL,
+    ImageID VARCHAR(32) NOT NULL,
     PhotographerID INT NOT NULL,
     Timestamp DATETIME NOT NULL DEFAULT NOW(),
 
@@ -101,13 +101,13 @@ CREATE TABLE PersonalSite.Collections (
     ID VARCHAR(32) PRIMARY KEY,
     Name VARCHAR(128) COLLATE utf8mb4_bin,
     Description VARCHAR(1024),
-    IsUnlisted TINTYINT DEFAULT 0 NOT NULL,
+    IsUnlisted TINYINT DEFAULT 0 NOT NULL,
     Timestamp DATETIME NOT NULL DEFAULT NOW()
 ) CHARACTER SET = utf8mb4;
 
 CREATE TABLE PersonalSite.CollectionImages (
-    ImageID INT NOT NULL,
-    CollectionID INT NOT NULL,
+    ImageID VARCHAR(32) NOT NULL,
+    CollectionID VARCHAR(32) NOT NULL,
     
     CONSTRAINT FK_CollecImg_R_Img
         FOREIGN KEY (ImageID) REFERENCES PersonalSite.Images (ID)

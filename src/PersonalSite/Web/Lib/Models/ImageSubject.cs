@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Lib.Models
 {
     [Table("ImageSubject")]
+    [PrimaryKey(nameof(ImageID), nameof(SubjectID))]
     public class ImageSubject
     {
-        [Key]
-        public int ID { get; set; }
+        public string ImageID { get; set; }
         public int SubjectID { get; set; }
         public QuantityBucket QuantityBucket { get; set; }
         public int IsPrimarySubject { get; set; }
