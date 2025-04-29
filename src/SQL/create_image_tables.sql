@@ -23,6 +23,7 @@ CREATE TABLE PersonalSite.Images (
 ) CHARACTER SET = utf8mb4;
 
 CREATE TABLE PersonalSite.ImageViews (
+    ImageViewID INT PRIMARY KEY AUTO_INCREMENT, -- To make EF happy
     ImageID VARCHAR(32) NOT NULL,
     Timestamp DATETIME NOT NULL DEFAULT NOW(),
 

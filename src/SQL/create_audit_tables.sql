@@ -12,6 +12,7 @@ CREATE TABLE PersonalSite.LoginAudit (
 ) CHARACTER SET = utf8mb4;
 
 CREATE TABLE PersonalSite.PageViews (
+    PageViewID INT PRIMARY KEY AUTO_INCREMENT, -- To make EF happy
     PageName VARCHAR(64) COLLATE utf8mb4_bin,
     Timestamp DATETIME NOT NULL DEFAULT NOW()
 ) CHARACTER SET = utf8mb4;

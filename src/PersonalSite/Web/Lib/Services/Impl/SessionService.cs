@@ -73,7 +73,23 @@ namespace Web.Lib.Services.Impl
             }
             else
             {
-                // TODO
+                // This function doesn't *validate* access tokens,
+                // that's for the identity platform to do. This
+                // service just refreshes them so they're available
+                // for the identity platform when it needs them
+                if (JwtService.IsExpired(accessToken))
+                {
+                    // Use the refresh token (VALIDATED) to get a new
+                    // access token
+                    var refreshToken = await RefreshTokenService.FetchFromRequestAsync();
+                    if (refreshToken is not null)
+                    {
+                        await RefreshTokenService.CycleForRequestAsync();
+                        var newAccessToken = JwtService.Generate(refreshToken.Account.DisplayName ?? refreshToken.Account.Username,
+                                                                 refreshToken.AccountID);
+                        JwtService.WriteToClient(newAccessToken);
+                    }
+                }
             }
         }
 
