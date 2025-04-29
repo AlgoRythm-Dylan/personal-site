@@ -22,12 +22,14 @@
 </div>
 
 <div class="panel">
-    @if(User.IsAuthenticated()){
-        <p>Hello @User.Identity.Name!</p>
+    @if(User.IsAuthenticated())
+    {
+        <h1>Hello @User.Identity.Name!</h1>
     }
 
     @if(await AccountService.NoAccountsExistAsync())
     {
+        <h1 class="no-spacing-bottom">Site Setup</h1>
         <p>
             Looks like the site hasn't been set up yet. Click
             <a href="~/Account/Setup">here</a> to begin.
@@ -53,7 +55,6 @@
             display: flex;
             flex: 1;
             justify-content: end;
-            margin-top: 
         }
 
         #jumbotron-image {
@@ -102,7 +103,7 @@
 
         function populateLies(){
             document.querySelectorAll("[data-lie]").forEach(el => {
-                const lie = LIES.splice(Math.floor(Math.random() * LIES.length), 1);
+                const lie = LIES.splice(Math.floor(Math.random() * LIES.length), 1)[0];
                 el.innerHTML = `${lie},`;
             });
         }

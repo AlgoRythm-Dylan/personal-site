@@ -9,6 +9,7 @@
     --rounding: 0.6pc;
     --header-bg: rgba(255, 245, 238, 0.7);
     --dither-color: rgb(190, 190, 190);
+    --required-color: red;
     /* fonts */
     --font: "Inter", sans-serif;
     --title-font: "Lexend Deca", sans-serif;
@@ -112,6 +113,14 @@ button:active {
     margin: 0px;
     padding: 0px;
 }
+.no-spacing-bottom {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+.no-spacing-top {
+    margin-top: 0px;
+    padding-top: 0px;
+}
 .uniform-spacing {
     padding: 0px;
     margin: var(--spacing);
@@ -184,4 +193,33 @@ button:active {
 }
 .monospace {
     font-family: var(--monospace-font);
+}
+.required::after {
+    content: "*";
+    color: var(--required-color);
+}
+.auto-cols {
+    display: flex;
+    flex-direction: row;
+}
+.auto-cols > * {
+    flex: 1;
+    flex-basis: 1;
+    margin-right: var(--spacing-lg);
+
+    display: flex;
+    flex-direction: column;
+}
+.auto-cols > *:last-child {
+    margin-right: 0px;
+}
+@media screen and (max-width: 800px){
+    .auto-cols {
+        flex-direction: column;
+    }
+}
+
+.flex-stack {
+    display: flex;
+    flex-direction: column;
 }

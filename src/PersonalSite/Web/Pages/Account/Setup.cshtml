@@ -4,7 +4,7 @@
 }
 <div class="panel constrained">
 
-    <h1>Setup</h1>
+    <h1 class="no-spacing-bottom">Setup</h1>
     <p>
         Since this site doesn't have any accounts yet,
         you can use this page to create one. This page
@@ -12,12 +12,22 @@
     </p>
 
     <form method="post">
-        <label asp-for="Username"></label>
-        <input asp-for="Username" />
-        <label asp-for="Password"></label>
-        <input asp-for="Password" />
-        <label asp-for="DisplayName"></label>
-        <input asp-for="DisplayName" />
+        <div class="auto-cols">
+            <div>
+                <label asp-for="Username" class="required"></label>
+                <input asp-for="Username" />
+            </div>
+            <div>
+                <label asp-for="Password" class="required"></label>
+                <input asp-for="Password" />
+            </div>
+        </div>
+        
+        <div class="flex-stack" style="margin-top: var(--spacing-lg);">
+            <label asp-for="DisplayName"></label>
+            <input asp-for="DisplayName" />
+        </div>
+        
 
         <button type="submit" class="large-top-spacing">Done</button>
     </form>
