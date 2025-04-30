@@ -1,4 +1,12 @@
 ﻿@page
 @model Web.Pages.Account.LoginModel
 @{
+    ViewData["Title"] = "Login";
 }
+<form method="post">
+    <label asp-for="Username" class="required"></label>
+    <input asp-for="Username" />
+    <label asp-for="Password" class="required"></label>
+    <input asp-for="Password" />
+    <button type="submit">Login</button>
+</form>

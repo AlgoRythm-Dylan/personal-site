@@ -12,9 +12,10 @@ namespace Web.Pages
             ObjectViewService = ovs;
         }
 
-        public async void OnGet()
+        public async Task<ActionResult> OnGet()
         {
             await ObjectViewService.RecordPageViewAsync("Index");
+            return Page();
         }
     }
 }
