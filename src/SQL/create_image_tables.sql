@@ -3,7 +3,7 @@
 CREATE TABLE PersonalSite.Images (
     ID VARCHAR(32) PRIMARY KEY,
     Title VARCHAR(256) COLLATE utf8mb4_bin,
-    Description VARCHAR(2048) COLLATE utf8mb4_bin,
+    Description VARCHAR(4096) COLLATE utf8mb4_bin,
     AlterationsDescription VARCHAR(1024) COLLATE utf8mb4_bin,
     NoAlterations TINYINT DEFAULT NULL,
     SourceWidth INT NOT NULL,
@@ -17,6 +17,7 @@ CREATE TABLE PersonalSite.Images (
     ExposureTimeNumerator DECIMAL(6, 1),
     ExposureTimeDenominator INT,
     Aperature DECIMAL(6, 1),
+    ContentTag VARCHAR(256) DEFAULT NULL,
     
     UploadDate DATETIME NOT NULL DEFAULT NOW(),
     DeletedDate DATETIME DEFAULT NULL

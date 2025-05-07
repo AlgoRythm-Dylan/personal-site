@@ -9,9 +9,11 @@ namespace Web.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly IAccountService AccountService;
-        public LoginModel(IAccountService accs)
+        private readonly ISessionService SessionService;
+        public LoginModel(IAccountService accs, ISessionService ss)
         {
             AccountService = accs;
+            SessionService = ss;
         }
 
         [BindProperty]
@@ -36,6 +38,23 @@ namespace Web.Pages.Account
                 return Redirect("Setup");
             }
             return Page();
+        }
+
+        public async Task<ActionResult> OnPost()
+        {
+            if (User.IsAuthenticated())
+            {
+                return Redirect("~/");
+            }
+            var result = await SessionService.LoginAsync(Username, Password);
+            if(result is null)
+            {
+                return Page();
+            }
+            else
+            {
+                return Redirect("~/");
+            }
         }
     }
 }

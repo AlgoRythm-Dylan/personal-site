@@ -58,7 +58,7 @@ namespace Web.Lib.Services.Impl
         public string? ReadFromRequest()
         {
             var context = HttpContextAccessor.HttpContextOrThrow();
-            return context.Request.Headers[AppConstants.ACCESS_TOKEN_COOKIE_KEY].FirstOrDefault();
+            return context.Request.Cookies[AppConstants.ACCESS_TOKEN_COOKIE_KEY];
         }
 
         public async Task CycleForRequestAsync()
@@ -69,7 +69,7 @@ namespace Web.Lib.Services.Impl
             {
                 var newAccessToken = Generate(newRefreshToken.Account.DisplayName ?? newRefreshToken.Account.Username, newRefreshToken.AccountID);
                 WriteToClient(newAccessToken);
-                context.Request.Headers[AppConstants.ACCESS_TOKEN_COOKIE_KEY] = newAccessToken;
+                context.Items[AppConstants.NEW_TOKEN_KEY] = newAccessToken;
             }
         }
     }

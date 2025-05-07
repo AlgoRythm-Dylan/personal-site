@@ -20,21 +20,15 @@ namespace Web
 
             var app = builder.Build();
 
+            app.UseRouting();
+
             app.UseTokenRefresher();
             app.UseAuthentication();
             app.UseAuthorization();
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-            }
-
-            app.UseRouting();
-            
 
             app.MapStaticAssets();
             app.MapRazorPages()
-               .WithStaticAssets();
+                .WithStaticAssets();
 
             app.Run();
         }

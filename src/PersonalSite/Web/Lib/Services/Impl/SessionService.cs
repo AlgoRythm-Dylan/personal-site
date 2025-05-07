@@ -34,6 +34,14 @@ namespace Web.Lib.Services.Impl
             return Convert.ToHexString(bytes);
         }
 
+        /// <summary>
+        /// Try to log in the user. If success, return the account of the
+        /// logged in user and start a session as that account. If failure,
+        /// return null.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns>If success, return account of the user. If failure, return null.</returns>
         public async Task<Account?> LoginAsync(string username, string password)
         {
             var lowerUsername = username.ToLower();

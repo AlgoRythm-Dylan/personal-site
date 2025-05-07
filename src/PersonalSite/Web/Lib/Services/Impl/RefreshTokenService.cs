@@ -56,14 +56,14 @@ namespace Web.Lib.Services.Impl
         public async Task<RefreshToken?> FetchFromRequestAsync()
         {
             var httpContext = HttpContextAccessor.HttpContextOrThrow();
-            var token = httpContext.Request.Headers[AppConstants.REFRESH_TOKEN_COOKIE_KEY].FirstOrDefault();
+            var token = httpContext.Request.Cookies[AppConstants.REFRESH_TOKEN_COOKIE_KEY];
             if(token is null)
             {
                 return null;
             }
             else
             {
-                return await Ctx.RefreshTokens.FirstOrDefaultAsync(tok => tok.Token == token && tok.Expiry < DateTime.UtcNow);
+                return await Ctx.RefreshTokens.FirstOrDefaultAsync(tok => tok.Token == token && tok.Expiry > DateTime.UtcNow);
             }
         }
 
@@ -91,15 +91,18 @@ namespace Web.Lib.Services.Impl
         /// <returns>New refresh token if current is valid, null otherwise.</returns>
         public async Task<RefreshToken?> CycleForRequestAsync()
         {
+            var ctx = HttpContextAccessor.HttpContextOrThrow();
             var current = await FetchFromRequestAsync();
             if(current is null)
             {
+                ctx.Response.Cookies.Delete(AppConstants.REFRESH_TOKEN_COOKIE_KEY);
                 return null;
             }
             else
             {
                 await InvalidateAsync(current.Token);
                 var newRefreshToken = GenerateFor(current.AccountID);
+                newRefreshToken.Account = await Ctx.Accounts.FirstAsync(acc => acc.ID == current.AccountID);
                 await SaveAsync(newRefreshToken);
                 WriteToClient(newRefreshToken.Token);
                 return newRefreshToken;

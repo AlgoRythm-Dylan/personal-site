@@ -20,22 +20,24 @@
         <div id="jumbotron-image"></div>
     </div>
 </div>
-
-<div class="panel">
-    @if(User.IsAuthenticated())
-    {
+@if(User.IsAuthenticated())
+{
+    <div class="panel">
         <h1>Hello @User.Identity.Name!</h1>
-    }
-
-    @if(await AccountService.NoAccountsExistAsync())
-    {
-        <h1 class="no-spacing-bottom">Site Setup</h1>
         <p>
-            Looks like the site hasn't been set up yet. Click
-            <a href="~/Account/Setup">here</a> to begin.
+            <a href="~/Account/Logout">Sign out</a>
         </p>
-    }
-</div>
+    </div>
+}
+
+@if(await AccountService.NoAccountsExistAsync())
+{
+    <h1 class="no-spacing-bottom">Site Setup</h1>
+    <p>
+        Looks like the site hasn't been set up yet. Click
+        <a href="~/Account/Setup">here</a> to begin.
+    </p>
+}
 
 <partial name="_ViewCountDisplay" model="@("Index")"/>
 

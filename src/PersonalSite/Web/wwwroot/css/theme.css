@@ -106,6 +106,13 @@ button:active {
     display: flex;
     flex-direction: column;
 }
+.panel-floating {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: var(--spacing-lg);
+    width: 1200px;
+    max-width: calc(100% - (2 * var(--spacing-lg)));
+}
 .glow {
     box-shadow: var(--glow-shadow);
 }
@@ -120,6 +127,12 @@ button:active {
 .no-spacing-top {
     margin-top: 0px;
     padding-top: 0px;
+}
+.margin-top {
+    margin-top: var(--spacing);
+}
+.margin-top-lg {
+    margin-top: var(--spacing-lg);
 }
 .uniform-spacing {
     padding: 0px;

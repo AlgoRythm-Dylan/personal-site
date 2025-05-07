@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS PersonalSite;
+
 \. create_users.sql
 \. create_user_tables.sql
 \. create_session_tables.sql

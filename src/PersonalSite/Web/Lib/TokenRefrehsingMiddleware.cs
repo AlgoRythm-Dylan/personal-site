@@ -1,4 +1,5 @@
-﻿using Web.Lib.Services.Spec;
+﻿using Microsoft.AspNetCore.Authorization;
+using Web.Lib.Services.Spec;
 
 namespace Web.Lib
 {
@@ -12,7 +13,7 @@ namespace Web.Lib
         public async Task InvokeAsync(HttpContext context, IJwtService jwtService, IRefreshTokenService refreshService)
         {
             var accessToken = jwtService.ReadFromRequest();
-            if(accessToken is not null)
+            if (accessToken is not null)
             {
                 // If the token is present, only cycle if it's expired
                 if (jwtService.IsExpired(accessToken))

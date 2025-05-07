@@ -7,5 +7,6 @@
         public static readonly string REFRESH_TOKEN_COOKIE_KEY = "refresh_token";
         public static readonly int DEFAULT_JWT_EXPIRY_MINUTES = 15;
         public static readonly int DEFAULT_REFRESH_TOKEN_EXPIRY_MINUTES = 20160; // Two weeks
+        public static readonly string NEW_TOKEN_KEY = "NEW_TOKEN";
     }
 }

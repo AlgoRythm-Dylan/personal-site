@@ -3,10 +3,13 @@
 @{
     ViewData["Title"] = "Login";
 }
-<form method="post">
-    <label asp-for="Username" class="required"></label>
-    <input asp-for="Username" />
-    <label asp-for="Password" class="required"></label>
-    <input asp-for="Password" />
-    <button type="submit">Login</button>
-</form>
+<div class="panel panel-floating">
+    <h1>Login</h1>
+    <form method="post">
+        <label asp-for="Username" class="required"></label>
+        <input asp-for="Username" />
+        <label asp-for="Password" class="required"></label>
+        <input asp-for="Password" />
+        <button type="submit" class="margin-top-lg">Login</button>
+    </form>
+</div>

@@ -16,7 +16,7 @@ namespace Web.Lib.Models
         /// <summary>
         /// Description of the work.
         /// </summary>
-        [MaxLength(2048)]
+        [MaxLength(4096)]
         public string? Description { get; set; }
         /// <summary>
         /// If any alterations were made, the uploader can describe them here.
@@ -80,6 +80,14 @@ namespace Web.Lib.Models
         /// Optional aperature value such as 2.8
         /// </summary>
         public float? Aperature { get; set; } = null;
+        /// <summary>
+        /// Content tags can be set to reference the image on the site.
+        /// For example, homepage_image can be used to reference any
+        /// image tagged "homepage_image". This does include multiples,
+        /// in which case the site should show all matching images in
+        /// a slideshow.
+        /// </summary>
+        public string? ContentTag { get; set; } = null;
 
         public DateTime UploadDate { get; set; } = DateTime.Now;
         public DateTime? DeletedDate { get; set; } = null;

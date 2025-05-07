@@ -38,7 +38,21 @@ namespace Web.Lib
                     {
                         OnMessageReceived = async ctx =>
                         {
-                            ctx.Token = ctx.Request.Cookies[AppConstants.ACCESS_TOKEN_COOKIE_KEY];
+                            var newRefreshToken = ctx.Request.HttpContext.Items[AppConstants.NEW_TOKEN_KEY];
+                            if(newRefreshToken is not null)
+                            {
+                                ctx.Token = (string)newRefreshToken;
+                            }
+                            else
+                            {
+                                ctx.Token = ctx.Request.Cookies[AppConstants.ACCESS_TOKEN_COOKIE_KEY];
+                            }
+                        },
+                        OnChallenge = async ctx =>
+                        {
+                            ctx.HandleResponse();
+                            ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            ctx.Response.Redirect("/Errors/401");
                         }
                     };
                 });
