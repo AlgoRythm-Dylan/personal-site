@@ -35,7 +35,3 @@ html, body {
     flex: 1;
     overflow-x: auto;
 }
-
-form > label {
-    margin: var(--spacing) 0px;
-}

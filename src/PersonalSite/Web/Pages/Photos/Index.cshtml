@@ -1,0 +1,31 @@
+﻿@page
+@model Web.Pages.Photos.IndexModel
+@{
+    ViewData["Title"] = "Photos";
+}
+
+<div class="panel-floating">
+    <h1 class="impact no-spacing">Photos</h1>
+</div>
+
+@if (User.IsAuthenticated())
+{
+    <div class="panel panel-floating">
+        <div id="upload-panel">
+            Hey @User.Identity.Name, want to upload something?
+            <a class="link-button" href="~/Image/Upload"><i class="fa-solid fa-upload"></i> Upload</a>
+        </div>
+    </div>
+}
+@section Styles {
+    <style>
+        div#upload-panel {
+            display: flex;
+            align-items: center;
+        }
+
+            div#upload-panel > a {
+                margin-left: auto;
+            }
+    </style>
+}

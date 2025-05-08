@@ -3,4 +3,167 @@
 @{
     ViewData["Title"] = "Upload Image";
 }
-<h2>Upload an Image</h2>
+
+<div class="panel-floating">
+    <h1 class="impact no-spacing">Upload an Image</h1>
+</div>
+
+<div class="panel panel-floating">
+
+    <input type="file" accept="image/png, image/jpeg" id="image-upload" />
+
+    <div class="image-upload-area" data-related-input="#image-upload">
+        <p>Drag and drop image here or click to to open file picker</p>
+        <p class="image-upload-area-filename"></p>
+    </div>
+
+    <div id="hidden-before-upload">
+
+        <div id="preview-and-palette">
+            <div id="preview-box"></div>
+            <div id="palette-box"></div>
+        </div>
+
+        <div id="basic-stats-grid">
+            <p id="brightness-label">
+                Brightness: <span id="brightness-display"></span>
+            </p>
+            <p id="resolution-label">
+                Resolution: <span id="resolution-display"></span>
+            </p>
+        </div>
+
+        <label for="title">Title</label>
+        <input id="title" placeholder="Title" maxlength="256"/>
+
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Work Description" maxlength="4096"></textarea>
+
+        <div class="hline"></div>
+
+        <label>
+            <input type="checkbox" id="has-alterations"/> This image was altered in some way
+        </label>
+
+        <label for="image-alterations" data-image-alteration-item>Description of image alterations</label>
+        <textarea id="image-alterations" placeholder="Alterations" maxlength="1024" data-image-alteration-item></textarea>
+
+    </div>
+
+</div>
+@section Styles {
+    <style>
+        input#image-upload, div#hidden-before-upload {
+            display: none;
+            flex-direction: column;
+        }
+
+        #preview-and-palette {
+            flex-direction: column;
+            min-height: 0px;
+            max-height: 500px;
+            max-width: 100%;
+            overflow: hidden;
+            width: auto;
+            margin: var(--spacing-lg) auto;
+            display: flex;
+            align-items: center;
+        }
+        #preview-box {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+        #preview-box > img {
+            height: auto;
+            width: auto;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        #palette-box {
+            display: flex;
+            flex-direction: row;
+            height: 30px;
+        }
+        #palette-box > div {
+            flex: 1;
+        }
+
+        #basic-stats-grid {
+            margin-top: var(--spacing-lg);
+            display: grid;
+            border: var(--border);
+            grid-template-columns: 1fr 1fr;
+        }
+
+        #basic-stats-grid > * {
+            margin: 0px;
+            padding: var(--spacing-lg);
+            border-right: var(--border);
+            text-align: center;
+        }
+        #basic-stats-grid > *:last-of-type {
+            border-right: none;
+        }
+
+        [data-image-alteration-item]{
+            display: none;
+        }
+    </style>
+}
+@section Scripts {
+    <script>
+
+        var elements;
+
+        addEventListener("load", async () => {
+            elements = getAllElementsWithIDs();
+
+            elements["image-upload"].addEventListener("input", () => {
+                resetPage();
+                handleImageUpload();
+            });
+
+            elements["has-alterations"].addEventListener("input", () => {
+                elements["has-alterations"].checked ? showImageAlterationItems() : hideImageAlterationItems();
+            });
+        });
+
+        function resetPage(){
+            elements["preview-box"].innerHTML = "";
+            elements["palette-box"].innerHTML = "";
+        }
+
+        async function handleImageUpload(){
+            if(elements["image-upload"].files.length) {
+                const info = await getImageInfoFromFile(elements["image-upload"].files[0]);
+                elements["hidden-before-upload"].style.display = "flex";
+                for (let color of info.palette) {
+                    let display = document.createElement("div");
+                    display.style.width = "25px";
+                    display.style.height = "25px";
+                    display.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                    elements["palette-box"].appendChild(display);
+                }
+                elements["preview-box"].appendChild(info.image);
+                elements["palette-box"].style.width = `${(info.image.offsetHeight/info.image.naturalHeight) * info.image.naturalWidth}px`;
+                elements["brightness-display"].innerHTML = Math.round(info.brightness * 100) + "%";
+                elements["resolution-display"].innerHTML = `${info.image.naturalWidth}x${info.image.naturalHeight}`;
+            }
+        }
+
+        function showImageAlterationItems(){
+            document.querySelectorAll("[data-image-alteration-item]").forEach(el => {
+                el.style.display = "block";
+            });
+        }
+
+        function hideImageAlterationItems(){
+            document.querySelectorAll("[data-image-alteration-item]").forEach(el => {
+                el.style.display = "none";
+            });
+            elements["image-alterations"].value = "";
+        }
+    </script>
+}

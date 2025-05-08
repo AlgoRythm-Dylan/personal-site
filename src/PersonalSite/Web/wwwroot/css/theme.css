@@ -3,6 +3,7 @@
     /* generic */
     --body-bg: rgb(255, 245, 238);
     --color: rgb(60, 60, 60);
+    --color-muted: rgb(90, 90, 90);
     --spacing: 0.5em;
     --spacing-lg: 1em;
     --rounding-sm: 0px;
@@ -21,6 +22,7 @@
     --border: solid var(--border-color) 1px;
     --border-color-strong: black;
     --border-strong: solid var(--border-color-strong) 3px;
+    --border-dashed: dashed var(--border-color) 1px;
     /* outline */
     --outline-focus: solid var(--accent-color) 3px;
     /* glow */
@@ -57,13 +59,16 @@ body {
 h1, h2, h3, h4 {
     font-family: var(--title-font);
 }
+form> label, label {
+    margin: var(--spacing) 0px;
+}
 pre, code {
     font-family: monospace;
 }
 pre, code {
     border: var(--border-strong);
 }
-button, input, select, textarea {
+button, input, select, textarea, a.link-button {
     padding: var(--spacing);
     border-radius: var(--rounding-sm);
     box-sizing: border-box;
@@ -74,10 +79,10 @@ button:focus, input:focus, select:focus, textarea:focus {
 input:focus, select:focus, textarea:focus {
     outline: var(--outline-focus);
 }
-button, input, textarea, select {
+button, input, textarea, select, a.link-button {
     border: none;
 }
-button, input, select, textarea {
+button, input, select, textarea, a.link-button {
     background: var(--input-bg);
 }
 a {
@@ -86,17 +91,22 @@ a {
 a:hover {
     color: var(--accent-color-hover);
 }
-button {
+button, a.link-button {
     background: var(--button-bg);
     color: var(--button-color);
     transition: background 0.1s;
     cursor: pointer;
 }
-button:hover {
+button:hover, a.link-button:hover {
     background: var(--button-bg-hover);
 }
-button:active {
+button:active, a.link-button:active {
     background: var(--button-bg-active);
+}
+a.link-button {
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
 }
 
 /* classes */
@@ -235,4 +245,38 @@ button:active {
 .flex-stack {
     display: flex;
     flex-direction: column;
+}
+
+.image-upload-area {
+    border: var(--border-dashed);
+    padding: var(--spacing-lg);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.image-upload-area > p {
+    margin: 0px;
+    padding: 0px;
+    color: var(--color-muted);
+}
+.image-upload-area-filename {
+    color: var(--accent-color) !important;
+    display: none;
+    justify-content: center;
+}
+
+.muted, .subtext {
+    color: var(--color-muted);
+}
+.subtext {
+    font-style: italic;
+}
+.hline {
+    height: 1px;
+    width: 100%;
+    margin: var(--spacing-lg) 0px;
+    background: var(--border-color);
 }
