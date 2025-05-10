@@ -29,9 +29,42 @@
 });
 
 function getAllElementsWithIDs(startQuery="body") {
-    let results = {};
+    const results = {};
     document.querySelectorAll(`${startQuery} [id]`).forEach(el => {
         results[el.id] = el;
     });
     return results;
+}
+
+// TODO?: pull dialog library over from other project, if
+// the need is there...
+class Dialog {
+
+    static layers = [];
+
+    static createLayer() {
+        const layer = document.createElement("div");
+        layer.className = "dialog-layer";
+        document.body.appendChild(layer);
+        return layer;
+    }
+    static show(element) {
+        const layer = this.createLayer();
+        layer.appendChild(element);
+        this.layers.push(layer);
+    }
+    static close() {
+        if (!this.layers.length) {
+            throw new Error("No dialog layer to close!");
+        }
+        this.layers.pop().remove();
+    }
+}
+
+function cloneTemplate(templateID) {
+    const template = document.getElementById(templateID);
+    if (!template) {
+        throw new Error(`Could not find template with ID "${templateID}"`);
+    }
+    return template.content.cloneNode(true);
 }

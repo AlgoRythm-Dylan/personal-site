@@ -11,6 +11,7 @@
     --header-bg: rgba(255, 245, 238, 0.7);
     --dither-color: rgb(190, 190, 190);
     --required-color: red;
+    --dialog-layer-bg: rgba(80, 80, 80, 0.5);
     /* fonts */
     --font: "Inter", sans-serif;
     --title-font: "Lexend Deca", sans-serif;
@@ -279,4 +280,18 @@ a.link-button {
     width: 100%;
     margin: var(--spacing-lg) 0px;
     background: var(--border-color);
+}
+
+.dialog-layer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: var(--dialog-layer-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0px; /* flex items and scrolling layouts are FUNKY */
 }
